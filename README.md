@@ -56,13 +56,13 @@ Other things to install for convenience
 - [Visual Studio Code (vscode)](https://code.visualstudio.com/): Convinent tool for editing codes. Additionally, install the `Python` extension in vscode for a python programming interface.
 
 ## How to use 
-You only need to use three method: `action`, `step`, `GetImage`.   
+You only need to use three methods: `action`, `step`, `GetImage`.   
 * `action`: Moves the guidewire in the simulator.   
 * `step`: Calculates dynamics in the simulator for one step.   
 * `SetImage`: Takes a picture of the simulator.   
 * `SaveImage`: Saves the image on the computer (Optional).   
 
-You can refer [examples/basic.py](examples/basic.py).   
+You can refer [basic_example.py](basic_example.py).   
 First, import the module.   
 ```
 from Package.scene import SOFA, SaveImage
@@ -79,7 +79,7 @@ for i in range(10000):
     image = sofa.GetImage()
     SaveImage(image, f'image/screen{i%10}.jpg')
 ```
-You can see the simulation screen after running [examples/basic.py](examples/basic.py).   
+You can see the simulation screen while running [basic_example.py](basic_example.py).   
 <img src="readme_files/example.gif">
 
 ## Task
