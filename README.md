@@ -79,7 +79,7 @@ for i in range(10000):
     image = sofa.GetImage()
     SaveImage(image, f'image/screen{i%10}.jpg')
 ```
-You can see the simulation screen after running [basic_example.py](basic_example.py).   
+You can see the simulation screen while running [basic_example.py](basic_example.py).   
 <img src="readme_files/example.gif">
 
 ## Task
