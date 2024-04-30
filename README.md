@@ -1,5 +1,5 @@
 # GuidewireNavRL
-Use SOFA framework with Reinforcement Learning for guidewire navigation.
+Use [SOFA framework](https://github.com/sofa-framework/sofa) with Reinforcement Learning (RL) for guidewire navigation.
 
 
 ## Preparation
@@ -62,7 +62,7 @@ You only need to use three method: `action`, `step`, `GetImage`.
 * `SetImage`: Takes a picture of the simulator.   
 * `SaveImage`: Saves the image on the computer (Optional).   
 
-You can refer [test.py]().   
+You can refer [examples/basic.py](examples/basic.py).   
 First, import the module.   
 ```
 from Package.scene import SOFA, SaveImage
@@ -74,11 +74,14 @@ sofa = SOFA()
 Third, during the loop, use `self.action`, `self.step`, and `self.GetImage`.   
 ```
 for i in range(10000):
-    sofa.action(translation=1,rotation=0.01)
+    sofa.action(translation=1,rotation=0.1)
     sofa.step()
     image = sofa.GetImage()
     SaveImage(image, f'image/screen{i%10}.jpg')
 ```
-You can see this after running `test.py`.
+You can see the simulation screen after running [examples/basic.py](examples/basic.py).   
+<img src="readme_files/example.gif">
 
 ## Task
+**Task:** Create an RL model that controls the guidewire to target a specific exit.   
+You can use python modules for RL, such as [Stable-Baselines3](https://stable-baselines3.readthedocs.io/en/master/).

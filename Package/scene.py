@@ -25,6 +25,8 @@ class SOFA():
         Sofa.Simulation.init(self.root)
         self.init_display()
     def createScene(self):
+        self.root.gravity = [0,0,0]
+        self.root.dt = 0.01
         self.root.addObject('RequiredPlugin', pluginName=['BeamAdapter',
                                                         'SofaMiscCollision',
                                                         'SofaConstraint',
