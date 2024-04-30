@@ -59,7 +59,7 @@ Other things to install for convenience
 You only need to use three methods: `action`, `step`, `GetImage`.   
 * `action`: Moves the guidewire in the simulator.   
 * `step`: Calculates dynamics in the simulator for one step.   
-* `SetImage`: Takes a picture of the simulator.   
+* `GetImage`: Takes a picture of the simulator.   
 * `SaveImage`: Saves the image on the computer (Optional).   
 
 You can refer [basic_example.py](basic_example.py).   
