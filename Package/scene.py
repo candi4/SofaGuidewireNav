@@ -42,7 +42,10 @@ class SOFA():
                                                         ])
         self.root.addObject('FreeMotionAnimationLoop') # All the scenes in SOFA must include an AnimationLoop.
         self.root.addObject('VisualStyle', displayFlags=['showVisualModels',
-                                                    'showCollisionModels',
+                                                    # 'showCollisionModels',
+                                                    'hideCollisionModels',
+                                                    'hideMappings',
+                                                    'hideForceFields',
                                                     ])
         self.root.addObject('LCPConstraintSolver', mu='0.1', tolerance='1e-10', maxIt='1000', build_lcp='false')
         self.root.addObject('DefaultPipeline', draw='0', depth='6', verbose='1')
@@ -68,8 +71,8 @@ class SOFA():
         topoLines_cath.addObject('MechanicalObject', template='Rigid3d', name='dofTopo1')
         ## Guide
         topoLines_guide = self.root.addChild('topoLines_guide')
-        topoLines_guide.addObject('WireRestShape', template='Rigid3d', printLog=False, name='GuideRestShape', length=1000.0, straightLength=980.0, spireDiameter=25, spireHeight=0.0,
-                        densityOfBeams=[30, 5], numEdges=200, numEdgesCollis=[50, 10], youngModulus=20000, youngModulusExtremity=10000)
+        topoLines_guide.addObject('WireRestShape', template='Rigid3d', printLog=False, name='GuideRestShape', length=1000.0, straightLength=950.0, spireDiameter=30, spireHeight=0.0,
+                        densityOfBeams=[60, 10], numEdges=200, numEdgesCollis=[100, 20], youngModulus=1200, youngModulusExtremity=120)
         topoLines_guide.addObject('EdgeSetTopologyContainer', name='meshLinesGuide')
         topoLines_guide.addObject('EdgeSetTopologyModifier', name='Modifier')
         topoLines_guide.addObject('EdgeSetGeometryAlgorithms', name='GeomAlgo', template='Rigid3d')
@@ -171,44 +174,44 @@ class SOFA():
 
 
 
-        # # rootNode/CollisionModel
-        # CollisionModel = self.root.addChild('CollisionModel')
-        # ####### 이것만 바꾸면 됨
-        
-        # CollisionModel.addObject('MeshObjLoader', filename=self.vessel_filename, flipNormals='1',
-        #                                 triangulate='true', name='meshLoader')
-        # #######################
-        # CollisionModel.addObject('Mesh', position='@meshLoader.position', triangles='@meshLoader.triangles')
-        # CollisionModel.addObject('MechanicalObject', position='0 0 400', scale='3', name='DOFs1', ry='90')
-        # CollisionModel.addObject('TriangleCollisionModel', moving='0', simulated='0')
-        # CollisionModel.addObject('LineCollisionModel', moving='0', simulated='0')
-        # CollisionModel.addObject('PointCollisionModel', moving='0', simulated='0')
-        # #CollisionModel.addObject('OglModel', color='1 0 0 0.3', scale='3', fileMesh='phantom.obj',
-        # #                                 ry='90', name='Visual')
-        # CollisionModel.addObject('OglModel', color='1 0 0 0.3', scale='3', src='@meshLoader',
-        #                                 ry='90', name='Visual')
-
-
-
-
-
-
-
-
-
-        ## Make a vessel.
-        scale=1.5
-        # rotation=[0,0,0]
-        rotation=[-40.0, 0.0, 0.0]
-        stl = 'Package/carotids.stl'
+        # rootNode/CollisionModel
         Vessels = self.root.addChild('Vessels')
-        Vessels.addObject('MeshSTLLoader', filename=stl, flipNormals=False, triangulate=True, name='meshLoader', scale=scale, rotation=rotation)
-        Vessels.addObject('MeshTopology', position='@meshLoader.position', triangles='@meshLoader.triangles')
-        Vessels.addObject('MechanicalObject', name='DOFs1', scale=1, rotation=rotation)
-        Vessels.addObject('TriangleCollisionModel', moving=False, simulated=False)
-        Vessels.addObject('LineCollisionModel', moving=False, simulated=False)
-        Vessels.addObject('PointCollisionModel', moving=False, simulated=False)
-        Vessels.addObject('OglModel', color=[1, 0, 0, 0.3], src='@meshLoader', name='Visual', rotation=rotation)
+        ####### 이것만 바꾸면 됨
+        
+        Vessels.addObject('MeshObjLoader', filename=self.vessel_filename, flipNormals='1',
+                                        triangulate='true', name='meshLoader')
+        #######################
+        Vessels.addObject('Mesh', position='@meshLoader.position', triangles='@meshLoader.triangles')
+        Vessels.addObject('MechanicalObject', position='0 0 400', scale='3', name='DOFs1', ry='90')
+        Vessels.addObject('TriangleCollisionModel', moving='0', simulated='0')
+        Vessels.addObject('LineCollisionModel', moving='0', simulated='0')
+        Vessels.addObject('PointCollisionModel', moving='0', simulated='0')
+        #Vessels.addObject('OglModel', color='1 0 0 0.3', scale='3', fileMesh='phantom.obj',
+        #                                 ry='90', name='Visual')
+        Vessels.addObject('OglModel', color='1 0 0 0.3', scale='3', src='@meshLoader',
+                                        ry='90', name='Visual')
+
+
+
+
+
+
+
+
+
+        # ## Make a vessel.
+        # scale=1.5
+        # # rotation=[0,0,0]
+        # rotation=[-40.0, 0.0, 0.0]
+        # stl = 'Package/carotids.stl'
+        # Vessels = self.root.addChild('Vessels')
+        # Vessels.addObject('MeshSTLLoader', filename=stl, flipNormals=False, triangulate=True, name='meshLoader', scale=scale, rotation=rotation)
+        # Vessels.addObject('MeshTopology', position='@meshLoader.position', triangles='@meshLoader.triangles')
+        # Vessels.addObject('MechanicalObject', name='DOFs1', scale=1, rotation=rotation)
+        # Vessels.addObject('TriangleCollisionModel', moving=False, simulated=False)
+        # Vessels.addObject('LineCollisionModel', moving=False, simulated=False)
+        # Vessels.addObject('PointCollisionModel', moving=False, simulated=False)
+        # Vessels.addObject('OglModel', color=[1, 0, 0, 0.3], src='@meshLoader', name='Visual', rotation=rotation)
 
 
         # # Add another vessel to test stl collided by the catheter.
@@ -350,14 +353,16 @@ class SOFA():
 
 def SaveImage(image:np.ndarray, filename:str):
     if '/' in filename or '\\' in filename:
-        idx_slash = filename.find('/')
-        idx_islash = filename.find('\\')
-        if idx_slash  > idx_islash: 
-            idx = idx_slash
-        else: 
-            idx = idx_islash
+        idx_slash = filename[::-1].find('/')
+        idx_islash = filename[::-1].find('\\')
+        # The last thing is '/'
+        if idx_islash == -1 or 0 <= idx_slash < idx_islash: 
+            idx = idx_slash - len(filename)
+        # The last thing is '\\'
+        else:
+            idx = idx_islash - len(filename)
 
-        directory = filename[:idx]
+        directory = filename[:-idx]
         if not os.path.exists(directory):
             os.makedirs(directory)
             

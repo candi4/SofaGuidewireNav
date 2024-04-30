@@ -4,8 +4,9 @@ sofa = SOFA()
 
 
 for i in range(10000):
-    sofa.action(1,1)
+    sofa.action(1,0.01)
     sofa.step()
     image = sofa.GetImage()
-    SaveImage(image, f'image/screen{i}.jpg')
+    SaveImage(image, f'image/screen{i%10}.jpg')
+
 
