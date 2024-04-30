@@ -5,3 +5,4 @@ PyOpenGL
 scipy
 pillow
 opencv-python
+# For others
