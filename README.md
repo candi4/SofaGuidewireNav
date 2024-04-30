@@ -56,7 +56,7 @@ Other things to install for convenience
 - [Visual Studio Code (vscode)](https://code.visualstudio.com/): Convinent tool for editing codes. Additionally, install the `Python` extension in vscode for a python programming interface.
 
 ## How to use 
-You only need to use three method: `action`, `step`, `GetImage`.   
+You only need to use three methods: `action`, `step`, `GetImage`.   
 * `action`: Moves the guidewire in the simulator.   
 * `step`: Calculates dynamics in the simulator for one step.   
 * `SetImage`: Takes a picture of the simulator.   
