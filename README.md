@@ -62,7 +62,7 @@ You only need to use three method: `action`, `step`, `GetImage`.
 * `SetImage`: Takes a picture of the simulator.   
 * `SaveImage`: Saves the image on the computer (Optional).   
 
-You can refer [examples/basic.py](examples/basic.py).   
+You can refer [basic_example.py](basic_example.py).   
 First, import the module.   
 ```
 from Package.scene import SOFA, SaveImage
@@ -79,7 +79,7 @@ for i in range(10000):
     image = sofa.GetImage()
     SaveImage(image, f'image/screen{i%10}.jpg')
 ```
-You can see the simulation screen after running [examples/basic.py](examples/basic.py).   
+You can see the simulation screen after running [basic_example.py](basic_example.py).   
 <img src="readme_files/example.gif">
 
 ## Task
