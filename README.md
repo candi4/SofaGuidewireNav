@@ -1,5 +1,6 @@
-# SOFA_RL
-Use SOFA framework for Reinforcement Learning
+# GuidewireNavRL
+Use SOFA framework with Reinforcement Learning for guidewire navigation.
+
 
 ## Preparation
 ### 1. Install Anaconda
@@ -13,7 +14,7 @@ conda activate sofarl
 ```
 
 ### 3. Install SOFA framework
-Download ~~[SOFA v23.12.01 (.zip)](https://www.sofa-framework.org/download/)~~  [SOFA_v23.06.00_Win64.zip](https://github.com/sofa-framework/sofa/releases).   
+Download [SOFA_v23.06.00_Win64.zip](https://github.com/sofa-framework/sofa/releases).   
 Then, extract the zip file into preferred directory.   
 
 ### 4. Define the environment variables
@@ -54,4 +55,30 @@ Then, the python modules listed in `requirements.txt` will be installed in your 
 Other things to install for convenience   
 - [Visual Studio Code (vscode)](https://code.visualstudio.com/): Convinent tool for editing codes. Additionally, install the `Python` extension in vscode for a python programming interface.
 
-## 
+## How to use 
+You only need to use three method: `action`, `step`, `GetImage`.   
+* `action`: Moves the guidewire in the simulator.   
+* `step`: Calculates dynamics in the simulator for one step.   
+* `SetImage`: Takes a picture of the simulator.   
+* `SaveImage`: Saves the image on the computer (Optional).   
+
+You can refer [test.py]().   
+First, import the module.   
+```
+from Package.scene import SOFA, SaveImage
+```
+Second, create an object `sofa` using the class `SOFA`.
+```
+sofa = SOFA()
+```
+Third, during the loop, use `self.action`, `self.step`, and `self.GetImage`.   
+```
+for i in range(10000):
+    sofa.action(translation=1,rotation=0.01)
+    sofa.step()
+    image = sofa.GetImage()
+    SaveImage(image, f'image/screen{i%10}.jpg')
+```
+You can see this after running `test.py`.
+
+## Task
