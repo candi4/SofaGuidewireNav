@@ -13,17 +13,31 @@ import OpenGL.GL
 import OpenGL.GLU
 
 
-# 내가 제공하는 것. 
 # For using SOFA.
 class SOFA():
     def __init__(self):
         self.display_size = (640, 480)
         self.vessel_filename = os.path.dirname(os.path.abspath(__file__)) + '/../vessel/phantom.obj'
-        self.root = Sofa.Core.Node("root")
+        self.start_scene()
 
+    def reset(self):
+        # Close simulation
+        self.close_scene()
+
+        # Start simulation
+        self.start_scene()
+
+    def start_scene(self):
+        self.root = Sofa.Core.Node("root")
         self.createScene()
         Sofa.Simulation.init(self.root)
         self.init_display()
+        for _ in range(10): self.step(realtime=False)
+    
+    def close_scene(self):
+        pass
+
+    
     def createScene(self):
         self.root.gravity = [0,0,0]
         self.root.dt = 0.01
