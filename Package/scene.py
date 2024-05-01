@@ -285,10 +285,13 @@ class SOFA():
     def step(self, realtime=True):
         """Calculate simulator one step.
         """
+        target_time = time.time() + self.root.dt.value
         Sofa.Simulation.animate(self.root, self.root.dt.value)
         Sofa.Simulation.updateVisual(self.root)
         if realtime:
-            time.sleep(self.root.dt.value)
+            current_time = time.time()
+            if target_time - current_time > 0:
+                time.sleep(target_time - current_time)
         self.simple_render()
 
     def simple_render(self):

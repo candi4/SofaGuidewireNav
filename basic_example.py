@@ -6,7 +6,7 @@ sofa = SOFA()
 for i in range(10000):
     if i%50 == 0: sofa.reset()
     sofa.action(translation=1,rotation=0.1)
-    sofa.step()
+    sofa.step(realtime=False)
     image = sofa.GetImage()
     SaveImage(image, f'image/screen{i%50}.jpg')
 
