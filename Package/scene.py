@@ -1,7 +1,6 @@
 import Sofa
-
-import Sofa
 import Sofa.SofaGL
+
 import os
 import numpy as np
 import pygame
@@ -35,7 +34,8 @@ class SOFA():
         for _ in range(10): self.step(realtime=False)
     
     def close_scene(self):
-        pass
+        import streamlit as st
+        st.legacy_caching.clear_cache(Sofa)
 
     
     def createScene(self):
@@ -172,19 +172,6 @@ class SOFA():
         VisuCoilsOgl = VisuCoils.addChild('VisuOgl')
         VisuCoilsOgl.addObject('OglModel', name='Visual', color=[0.2, 0.8, 0.2], material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20', quads='@../ContainerCoils.quads')
         VisuCoilsOgl.addObject('IdentityMapping', input='@../Quads', output='@Visual')
-        # # What are these..? Probably visualization by transforming from quad_topology to triangle_topology.
-        # TriangleTopology = VisuGuide.addChild('TriangleTopology')
-        # TriangleTopology.addObject('TriangleSetTopologyContainer', name='TriangleContainer')
-        # TriangleTopology.addObject('TriangleSetTopologyModifier', name='Modifier')
-        # TriangleTopology.addObject('TriangleSetGeometryAlgorithms', name='GeomAlgo', template='Vec3d')
-        # TriangleTopology.addObject('Quad2TriangleTopologicalMapping', input='@../ContainerGuide', output='@TriangleContainer')
-        # # Ogl model
-        # VisuOgl = VisuGuide.addChild('VisuOgl')
-        # VisuOgl.addObject('OglModel', color=[0.2, 0.2, 0.8], #triangles='@../TriangleTopology/TriangleContainer.triangles', 
-        #                      material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20', 
-        #                      name='Visual')
-        # VisuOgl.addObject('IdentityMapping', input='@../Quads', output='@Visual')
-        ####################### <<< Make Instrument combining catheter, guidewire and coils. <<<
         
 
 
@@ -209,46 +196,6 @@ class SOFA():
 
 
 
-
-
-
-
-
-
-        # ## Make a vessel.
-        # scale=1.5
-        # # rotation=[0,0,0]
-        # rotation=[-40.0, 0.0, 0.0]
-        # stl = 'Package/carotids.stl'
-        # Vessels = self.root.addChild('Vessels')
-        # Vessels.addObject('MeshSTLLoader', filename=stl, flipNormals=False, triangulate=True, name='meshLoader', scale=scale, rotation=rotation)
-        # Vessels.addObject('MeshTopology', position='@meshLoader.position', triangles='@meshLoader.triangles')
-        # Vessels.addObject('MechanicalObject', name='DOFs1', scale=1, rotation=rotation)
-        # Vessels.addObject('TriangleCollisionModel', moving=False, simulated=False)
-        # Vessels.addObject('LineCollisionModel', moving=False, simulated=False)
-        # Vessels.addObject('PointCollisionModel', moving=False, simulated=False)
-        # Vessels.addObject('OglModel', color=[1, 0, 0, 0.3], src='@meshLoader', name='Visual', rotation=rotation)
-
-
-        # # Add another vessel to test stl collided by the catheter.
-        # scale=1.5
-        # rotation=[180, 180, 0.0]
-        # translation = [0, 150,120]#, 1,0,0,0]
-        # stl = 'carotids.stl'
-        # vessel2 = self.root.addChild('Vessel2')
-        # vessel2.addObject('MeshSTLLoader', filename=stl, flipNormals=False, triangulate=True, name='meshLoader2', scale=scale, 
-        #                 rotation=rotation,
-        #                 translation=translation
-        #                 )
-        # vessel2.addObject('MeshTopology', position='@meshLoader2.position', triangles='@meshLoader2.triangles', name='test')
-        # vessel2.addObject('MechanicalObject', name='DOFs1', scale=1)
-        # vessel2.addObject('TriangleCollisionModel', moving=False, simulated=False)
-        # vessel2.addObject('LineCollisionModel', moving=False, simulated=False)
-        # vessel2.addObject('PointCollisionModel', moving=False, simulated=False)
-        # vessel2.addObject('OglModel', color=[1, 0, 0, 0.3], src='@meshLoader2', name='Visual', )
-
-
-        
         
         # Set camera.
         source = [-600,0,300]
@@ -390,22 +337,16 @@ def SaveImage(image:np.ndarray, filename:str):
         
 
 
-# # 학생들이 만들 것.
 # # Environment made with gymnasium for RL.
 # import gymnasium as gym
 # class sofaenv(gym.Env):
 #     pass
 
-# # 사용 예시
-# from Package.scene import SOFA
-
-# sofa = SOFA()
 # # Make custom environment with gymnasium
 # # https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/ 
 # # https://colab.research.google.com/github/araffin/rl-tutorial-jnrr19/blob/master/5_custom_gym_env.ipynb#scrollTo=PQfLBE28SNDr 
 # # https://stable-baselines3.readthedocs.io/en/master/guide/custom_env.html 
 # # 나중에 sofa github에 ubuntu server에서 soaf interactiva camera로 이미지 저장할 수 있는 방법 묻기.
-# sofa.init()
 
 
 

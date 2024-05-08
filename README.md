@@ -12,16 +12,18 @@ Make virtual environment using anaconda with python version 3.8.
 conda create -n sofarl python=3.8
 conda activate sofarl
 ```
+The First line creates the virtual environment. The second line activates the virtual environment.   
+From now on, when using python, activate the virtual environment `sofarl` and type `python <file-name>`.
 
 ### 3. Install SOFA framework
 Download [SOFA_v23.06.00_Win64.zip](https://github.com/sofa-framework/sofa/releases/tag/v23.06.00).   
 Then, extract the zip file into preferred directory.   
 
 ### 4. Define the environment variables
-Follow `1.3.2. using python3` in [SofaPython3 Documentation](https://sofapython3.readthedocs.io/en/latest/content/Installation.html#setup-your-environment). Here is the Korean explanation:   
-- 시작 버튼 우클릭 -> '시스템' 클릭 -> '고급 시스템 설정' 클릭 -> '고급' 탭에서 '환경 변수' 버튼 클릭 -> 시스템 변수 새로 만들기
-   - 변수 이름: `SOFA_ROOT`, 변수 값: SOFA 디렉토리
-   - 변수 이름: `PYTHONPATH`, 변수 값: SOFA 디렉토리에서 plugins\SofaPython3\lib\python3\site-packages   
+Follow `1.3.2. using python3` in [SofaPython3 Documentation](https://sofapython3.readthedocs.io/en/latest/content/Installation.html#using-python3). Here is the explanation for Windows user:   
+- Right click **Start** button -> Click on the **System** -> Click on the **Advanced System Settings** -> Under the **Advanced** tab, click on the **Environment Variable** button -> Add new **System variables**
+   - Variable: `SOFA_ROOT`, Value: \<SOFA-install-directory>
+   - Variable: `PYTHONPATH`, Value: %SOFA_ROOT%\plugins\SofaPython3\lib\python3\site-packages   
 
 ### 5. Test SOFA
 After that, you can use `SofaPython3` within your virtual environment.   
@@ -55,31 +57,40 @@ Then, the python modules listed in `requirements.txt` will be installed in your 
 Other things to install for convenience   
 - [Visual Studio Code (vscode)](https://code.visualstudio.com/): Convinent tool for editing codes. Additionally, install the `Python` extension in vscode for a python programming interface.
 
-## How to use 
-You only need to use three methods: `action`, `step`, `GetImage`.   
-* `action`: Moves the guidewire in the simulation.   
-* `step`: Calculates dynamics in the simulation for one step.   
-* `GetImage`: Takes a picture of the simulation.   
-* `SaveImage`: Saves the image on the computer (Optional).   
+## How to use   
+How to use:
+1. Download the codes.
+   * Navigate to the [main page of the repository](https://github.com/candi4/GuidewireNavRL). 
+   * Above the list of files, click Code. 
+   * Click Download ZIP. 
+   * Move the zip file to preferred directory and unzip. 
+2. Make your own python code into the directory \<GuidewireNavRL>.   
+   * You only need to use four methods: `action`, `step`, `GetImage`, `reset`.   
+      * `action`: Moves the guidewire in the simulation.   
+      * `step`: Calculates dynamics in the simulation for one step.   
+      * `GetImage`: Takes a picture of the simulation.   
+      * `reset`: Resets the simulation to its initial state.   
+      * `SaveImage`: Saves the image on the computer (Optional).   
+3. Run your code. 
+   ```
+   python <your_python_file>
+   ```
 
 You can refer [basic_example.py](basic_example.py).   
-First, import the module.   
-```
-from Package.scene import SOFA, SaveImage
-```
-Second, create an object `sofa` using the class `SOFA`.
-```
-sofa = SOFA()
-```
-Third, during the loop, use `self.action`, `self.step`, and `self.GetImage`.   
-```
-for i in range(10000):
-    sofa.action(translation=1,rotation=0.1)
-    sofa.step()
-    image = sofa.GetImage()
-    SaveImage(image, f'image/screen{i%10}.jpg')
-```
-You can see the simulation screen while running [basic_example.py](basic_example.py).   
+   * First, import the module.   
+      ```
+      from Package.scene import SOFA, SaveImage
+      ```
+   * Second, create an object `sofa` using the class `SOFA`.
+      ```
+      sofa = SOFA()
+      ```
+   * Third, during the loop, use `self.action`, `self.step`, `self.GetImage`, and `self.reset`.   
+      ```
+      for i in range(10000):
+         ...
+      ```
+You can see the simulation screen while running [basic_example.py](basic_example.py) by running `python basic_example.py` within your conda virtual environment `sofarl`.   
 <img src="readme_files/example.gif">
 
 ## Task
