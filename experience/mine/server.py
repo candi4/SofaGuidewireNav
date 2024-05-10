@@ -9,6 +9,7 @@ from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
 from socketserver import ThreadingMixIn
 import threading
+import queue
 import random
 
 path = os.path.dirname(os.path.abspath(__file__)) + '/'
@@ -26,52 +27,28 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
     def log_message(self, format, *args):
         pass
 
-class Server():
-    def __init__(self):
-        self.reset()
-    def reset(self):
-        self.data = None
-        self.server2client = False
-        self.client2server = False
-    def setdata4client(self, data):
-        self.data = data
-        self.server2client = True
-        self.client2server = False
-    def setdata4server(self, data):
-        self.data = data
-        self.server2client = False
-        self.client2server = True
-    def getdata4client(self):
-        self.wait4server()
-        assert self.server2client == True
-        data = self.data
-        self.reset()
-        return data
-    def getdata4server(self):
-        self.wait4client()
-        assert self.client2server == True
-        data = self.data
-        self.reset()
-        return data
-    def wait4server(self):
-        while not self.server2client:
-            # print('wait4server')
-            pass
-    def wait4client(self):
-        while not self.client2server:
-            # print('wait4client')
-            pass
     
-# import queue
-# class Server():
-#     def __init__(self):
-#         self.data_queue = queue.Queue()
+class DataQueue():
+    def __init__(self):
+        self.server = queue.Queue() # server -> client
+        self.client = queue.Queue() # client -> server
+    def serverget(self):
+        # print('serverget')
+        return self.server.get()
+    def serverput(self,data):
+        # print('serverput')
+        # assert self.server.empty()
+        self.server.put(data)
+        return 0
+    def clientget(self):
+        # print('clientget')
+        return self.client.get()
+    def clientput(self,data):
+        # print('clientput')
+        # assert self.client.empty()
+        self.client.put(data)
+        return 0
 
-#     def setdata4client(self, data):
-#         self.data_queue.put(data)
-
-#     def getdata4server(self):
-#         return self.data_queue.get()
 
 # Main function
 def main():
@@ -83,13 +60,13 @@ def main():
     
 
     # Register functions
-    server = Server()
-    def dispatch(port_rpc, server):
+    dataqueue = DataQueue()
+    def dispatch(port_rpc, dataqueue):
         with SimpleThreadedXMLRPCServer(('localhost', port_rpc), requestHandler=RequestHandler) as s:
-            s.register_instance(server)
+            s.register_instance(dataqueue)
             s.serve_forever()
     # Starts the server thread with the context.
-    server_thread = threading.Thread(target=dispatch, args=(port_rpc,server))
+    server_thread = threading.Thread(target=dispatch, args=(port_rpc,dataqueue))
     server_thread.daemon = True
     server_thread.start()
 
@@ -104,21 +81,24 @@ def main():
         first_worker_thread = threading.Thread(target=deferredStart)
         first_worker_thread.daemon = True
         first_worker_thread.start()
+        time.sleep(1)
 
-        while random.random() < 0.8:
+        command = None
+        while command != 'exit':
+            if random.random() < 0.8: command = 'run'
+            else: command = 'exit'
             i += 1
             print('i',i)
             # Send some data to the client
-            data = {'command':'run','time':time.time(), 'i':i}
-            server.setdata4client(data)
+            data = {'command':command,'time':time.time(), 'i':i}
+            dataqueue.serverput(data)
 
             # Get some data from the client
-            data = server.getdata4server()
-            print('client -> server :',data)
+            data = dataqueue.clientget()
+            print('client -> server :',data, time.time())
 
-        # Send exit command
-        data = {'command':'exit','time':time.time(), 'i':i}
-        server.setdata4client(data)
+        # exit command sent
+        first_worker_thread.join() # Wait until client.py be finished.
 
         
         

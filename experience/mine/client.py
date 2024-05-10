@@ -1,7 +1,7 @@
 # client.py
 import sys
 import xmlrpc.client
-
+import time
 
 if __name__ == "__main__":
     print("Start client.py")
@@ -15,16 +15,29 @@ if __name__ == "__main__":
     print("Connected")
 
 
+    # import sys
+    # sys.path.append(r'C:\Users\82105\Dropbox\working\code_temp\SOFA_RL\Package/..')
+    # from Package.scene import SOFA, SaveImage
+    # sofa = SOFA()
+
+
+    # for i in range(50):
+    #     sofa.action(translation=1,rotation=0.1)
+    #     sofa.step(realtime=False)
+    #     image = sofa.GetImage()
+    #     SaveImage(image, f'image/screen{i%50}.jpg')
+
+
+
+
     command = None
     while command != 'exit':
         # Get data from server
-        print('before')
-        data = s.getdata4client()
-        print('after')
+        data = s.serverget()
         command = data['command']
-        print('server -> client :',data)
+        print('server -> client :',data, time.time())
 
         # Send data to server
-        data = {'state': 1}
-        s.setdata4server(data)
+        data = {'state': time.time()}
+        s.clientput(data)
     print("Exit")
