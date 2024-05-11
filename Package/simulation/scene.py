@@ -19,24 +19,12 @@ class SOFA():
         self.vessel_filename = os.path.dirname(os.path.abspath(__file__)) + '/../vessel/phantom.obj'
         self.start_scene()
 
-    def reset(self):
-        # Close simulation
-        self.close_scene()
-
-        # Start simulation
-        self.start_scene()
-
     def start_scene(self):
         self.root = Sofa.Core.Node("root")
         self.createScene()
         Sofa.Simulation.init(self.root)
         self.init_display()
         for _ in range(10): self.step(realtime=False)
-    
-    def close_scene(self):
-        import streamlit as st
-        st.legacy_caching.clear_cache(Sofa)
-
     
     def createScene(self):
         self.root.gravity = [0,0,0]
