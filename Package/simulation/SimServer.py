@@ -6,14 +6,16 @@ from xmlrpc.server import SimpleXMLRPCServer
 from xmlrpc.server import SimpleXMLRPCRequestHandler
 import threading
 import queue
+import time
 
 class Server():
-    def __init__(self):
+    def __init__(self, timeout=None):
         self.port_rpc = None
         self.clientfile = os.path.dirname(os.path.abspath(__file__)) + '/SimClient.py'
+        self.timeout = timeout
     def start(self):
         self.setport()
-        self.data = Server.Data()
+        self.data = Server.Data(timeout=self.timeout)
         self.startthread()
     def setport(self):
         # Find a free port to connect a server.
@@ -26,8 +28,8 @@ class Server():
         def __init__(self):
             queue.Queue.__init__(self)
             self.len = 0
-        def put(self, item):
-            queue.Queue.put(self, item)
+        def put(self, item, timeout=None):
+            queue.Queue.put(self, item, timeout=timeout)
             self.len += 1
         def get(self, timeout=None):
             res = queue.Queue.get(self, timeout=timeout)
@@ -37,23 +39,24 @@ class Server():
             return self.len
 
     class Data():
-        def __init__(self):
+        def __init__(self, timeout=None):
+            self.timeout = timeout
             self.serverdata = Server.CustomQueue() # server -> client
             self.clientdata = Server.CustomQueue() # client -> server
         def serverget(self):
-            res = self.serverdata.get()
+            res = self.serverdata.get(timeout=self.timeout)
             assert len(self.serverdata) == 0
             return res
         def serverput(self,item):
-            self.serverdata.put(item)
+            self.serverdata.put(item, timeout=self.timeout)
             assert len(self.serverdata) == 1
             return 0
         def clientget(self):
-            res = self.clientdata.get()
+            res = self.clientdata.get(timeout=self.timeout)
             assert len(self.clientdata) == 0
             return res
         def clientput(self,item):
-            self.clientdata.put(item)
+            self.clientdata.put(item, timeout=self.timeout)
             assert len(self.clientdata) == 1
             return 0
     def dataput(self, item):
@@ -96,12 +99,12 @@ class Server():
 
 
 
-
+# For test.
 if __name__ == "__main__":
     import time
     import random
 
-    server = Server()
+    server = Server(timeout=10)
     server.start()
 
     
@@ -115,15 +118,16 @@ if __name__ == "__main__":
             else: command = 'exit'
             i += 1
             print('i',i)
+            
+            # Get some data from the client.
+            data = server.dataget()
+            print('client -> server :',data, time.time())
+            
             # Send some data to the client.
             data = {'command':command,'time':time.time(), 'i':i}
             server.dataput(data)
 
-            # Get some data from the client.
-            data = server.dataget()
-            print('client -> server :',data, time.time())
-
-        # Close client.
+        # Close client. Closing client is decided by server.
         pass
 
         server.waitclientclose()
