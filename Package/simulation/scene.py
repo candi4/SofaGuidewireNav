@@ -16,7 +16,7 @@ import OpenGL.GLU
 class SOFA():
     def __init__(self):
         self.display_size = (640, 480)
-        self.vessel_filename = os.path.dirname(os.path.abspath(__file__)) + '/../vessel/phantom.obj'
+        self.vessel_filename = os.path.dirname(os.path.abspath(__file__)) + '/../../vessel/phantom.obj'
         self.start_scene()
 
     def start_scene(self):
@@ -305,23 +305,23 @@ class SOFA():
         image = np.flipud(image)
         return image
 
-def SaveImage(image:np.ndarray, filename:str):
-    if '/' in filename or '\\' in filename:
-        idx_slash = filename[::-1].find('/')
-        idx_islash = filename[::-1].find('\\')
-        # The last thing is '/'
-        if idx_islash == -1 or 0 <= idx_slash < idx_islash: 
-            idx = idx_slash - len(filename)
-        # The last thing is '\\'
-        else:
-            idx = idx_islash - len(filename)
+# def SaveImage(image:np.ndarray, filename:str):
+#     if '/' in filename or '\\' in filename:
+#         idx_slash = filename[::-1].find('/')
+#         idx_islash = filename[::-1].find('\\')
+#         # The last thing is '/'
+#         if idx_islash == -1 or 0 <= idx_slash < idx_islash: 
+#             idx = idx_slash - len(filename)
+#         # The last thing is '\\'
+#         else:
+#             idx = idx_islash - len(filename)
 
-        directory = filename[:-idx]
-        if not os.path.exists(directory):
-            os.makedirs(directory)
+#         directory = filename[:-idx]
+#         if not os.path.exists(directory):
+#             os.makedirs(directory)
             
-    im = PIL.Image.fromarray(image)
-    im.save(filename)
+#     im = PIL.Image.fromarray(image)
+#     im.save(filename)
         
 
 

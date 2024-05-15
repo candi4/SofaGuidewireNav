@@ -94,7 +94,7 @@ class Server():
         time.sleep(1)
     def waitclientclose(self):
         # exit command was aleady sent
-        self.first_worker_thread.join() # Wait until client.py be finished.
+        self.first_worker_thread.join() # Wait until the client be finished.
         
 
 
@@ -108,26 +108,37 @@ if __name__ == "__main__":
     server.start()
 
     
-    i = -1
     while True:
+        # Run the client.
         server.runclient()
 
-        command = None
-        while command != 'exit':
-            if random.random() < 0.8: command = 'run'
-            else: command = 'exit'
-            i += 1
-            print('i',i)
-            
-            # Get some data from the client.
-            data = server.dataget()
-            print('client -> server :',data, time.time())
-            
-            # Send some data to the client.
-            data = {'command':command,'time':time.time(), 'i':i}
-            server.dataput(data)
-
-        # Close client. Closing client is decided by server.
-        pass
-
+        for i in range(50):
+            # sofa.action(translation=1,rotation=0.1)
+            order = {'ordername':'action',
+                     'info': {'translation':1,
+                              'rotation':0.1}}
+            server.dataput(order)
+            server.dataget()
+            # sofa.step(realtime=False)
+            order = {'ordername': 'step',
+                     'info': {'realtime':False}}
+            server.dataput(order)
+            server.dataget()
+            # # image = sofa.GetImage()
+            # order = {'ordername': 'GetImage',
+            #          'info': dict()}
+            # server.dataput(order)
+            # image = server.dataget()
+            # SaveImage(image, f'image/screen{i%50}.jpg')
+        # Close the client.
+        order = {'ordername': 'close',
+                    'info': dict()}
+        server.dataput(order)
+        server.dataget()
         server.waitclientclose()
+        
+            
+
+        
+
+

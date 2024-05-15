@@ -2,9 +2,9 @@ import sys
 import xmlrpc.client
 
 
-# sys.path.append()
+# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 # os.path.dirname(os.path.abspath(__file__)) + '/SimClient.py'
-# from Package.scene import SOFA, SaveImage
+from scene import SOFA#, SaveImage
 
 class Client():
     def __init__(self):
@@ -15,10 +15,10 @@ class Client():
         self.server = xmlrpc.client.ServerProxy('http://localhost:' + port_rpc)
         print("Connected")
     def dataput(self, item):
-        # Send data to server.
+        # Send data to the server.
         return self.server.clientput(item)
     def dataget(self):
-        # Get data from server.
+        # Get data from the server.
         return self.server.serverget()
 
 
@@ -33,38 +33,31 @@ if __name__ == "__main__":
     client = Client()
     client.connect(port_rpc)
 
+    # Initialize sofa
+    sofa = SOFA()
+    sofa.step(realtime=False)
 
+    # Work as the order from the server.
+    close = False
+    while not close:
+        # Get order from the server.
+        order = client.dataget()
+        # order = {'ordername': str(), # in str
+        #          'info': dict()}     # in dict
+        response = {'data': dict(),}   # in dict
+        if order['ordername'] == 'close':
+            close = True
+        elif order['ordername'] == 'action':
+            translation = order['info'].get('translation', 0)
+            rotation    = order['info'].get('rotation',    0)
+            sofa.action(translation=translation, rotation=rotation)
+        elif order['ordername'] == 'step':
+            realtime = order['info'].get('realtime', True)
+            sofa.step(realtime=realtime)
+        elif order['ordername'] == 'GetImage':
+            image = sofa.GetImage()
+            response['data'] = {'image': image}
+        # Put response to the server.
+        client.dataput(response)
+    print("Close the simulation.")
 
-    # sofa = SOFA()
-    # for i in range(50):
-    #     sofa.action(translation=1,rotation=0.1)
-    #     sofa.step(realtime=False)
-    #     image = sofa.GetImage()
-    #     SaveImage(image, f'image/screen{i%50}.jpg')
-
-
-    # import 
-
-    # sofa = SOFA()
-    # for i in range(50):
-    #     sofa.action(translation=1,rotation=0.1)
-    #     sofa.step(realtime=False)
-    #     image = sofa.GetImage()
-    #     SaveImage(image, f'image/screen{i%50}.jpg')
-
-
-
-
-    import time
-    command = None
-    while command != 'exit':
-        # Send data to server.
-        data = {'state': time.time()}
-        client.dataput(data)
-
-        # Get data from server.
-        data = client.dataget()
-        command = data['command']
-        print('server -> client :',data, time.time())
-
-    print("Exit")
