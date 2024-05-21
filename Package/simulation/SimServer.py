@@ -148,9 +148,9 @@ if __name__ == "__main__":
 
     server = Server(timeout=10)
     server.start()
-    server.runclient()
 
     sim = SimController(server)
+    sim.run()
     for i in range(250):
         if i%50 == 1:
             sim.reset()
