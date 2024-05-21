@@ -13,7 +13,7 @@ class Client():
         self.port_rpc = port_rpc
         # Register the instance to the manager
         self.server = xmlrpc.client.ServerProxy('http://localhost:' + port_rpc)
-        print("Connected")
+        print("[SimClient.py] Connected")
     def dataput(self, item):
         # Send data to the server.
         return self.server.clientput(item)
@@ -21,12 +21,15 @@ class Client():
         # Get data from the server.
         return self.server.serverget()
 
+def saveData(data):
+    pass
+
 
 # This is run by runclient() in SimServer.
 if __name__ == "__main__":
-    print("Start SimClient.py")
+    print("[SimClient.py] Start SimClient.py")
     if len(sys.argv) != 2:
-        print("SYNTAX: python client.py port_rpc")
+        print("[SimClient.py] SYNTAX: python client.py port_rpc")
         sys.exit(-1)
     port_rpc = sys.argv[1]
 
@@ -59,5 +62,5 @@ if __name__ == "__main__":
             response['data'] = {'image': image}
         # Put response to the server.
         client.dataput(response)
-    print("Close the simulation.")
+    print("[SimClient.py] Close the simulation.")
 

@@ -97,7 +97,49 @@ class Server():
         self.first_worker_thread.join() # Wait until the client be finished.
         
 
-
+class SimController():
+    def __init__(self, server):
+        self.server = server
+    def exchange(self):
+        pass
+    def reset(self):
+        self.close()
+        self.run()
+    def close(self):
+        # Close the client.
+        order = {'ordername': 'close',
+                    'info': dict()}
+        self.server.dataput(order)
+        self.server.dataget()
+        self.server.waitclientclose()
+    def run(self):
+        # Run the client.
+        self.server.runclient()
+    def action(self, translation=0, rotation=0):
+        order = {'ordername':'action',
+                    'info': {'translation':1,
+                            'rotation':0.1}}
+        self.server.dataput(order)
+        self.server.dataget()
+    def step(self, realtime=False):
+        order = {'ordername': 'step',
+                    'info': {'realtime':realtime}}
+        self.server.dataput(order)
+        self.server.dataget()
+    def GetImage(self):
+        order = {'ordername': 'GetImage',
+                'info': dict()}
+        self.server.dataput(order)
+        image = self.server.dataget()
+        return image
+    def GetImage_new(self):
+        order = {'ordername': 'GetImage',
+                'info': dict()}
+        self.server.dataput(order)
+        image = self.server.dataget()
+        return image
+        
+        
 
 # For test.
 if __name__ == "__main__":
@@ -106,39 +148,13 @@ if __name__ == "__main__":
 
     server = Server(timeout=10)
     server.start()
+    server.runclient()
 
-    
-    while True:
-        # Run the client.
-        server.runclient()
-
-        for i in range(50):
-            # sofa.action(translation=1,rotation=0.1)
-            order = {'ordername':'action',
-                     'info': {'translation':1,
-                              'rotation':0.1}}
-            server.dataput(order)
-            server.dataget()
-            # sofa.step(realtime=False)
-            order = {'ordername': 'step',
-                     'info': {'realtime':False}}
-            server.dataput(order)
-            server.dataget()
-            # # image = sofa.GetImage()
-            # order = {'ordername': 'GetImage',
-            #          'info': dict()}
-            # server.dataput(order)
-            # image = server.dataget()
-            # SaveImage(image, f'image/screen{i%50}.jpg')
-        # Close the client.
-        order = {'ordername': 'close',
-                    'info': dict()}
-        server.dataput(order)
-        server.dataget()
-        server.waitclientclose()
-        
-            
-
-        
-
-
+    sim = SimController(server)
+    for i in range(250):
+        if i%50 == 1:
+            sim.reset()
+        sim.action(translation=1, rotation=0.1)
+        sim.step(realtime=False)
+        # image = sim.GetImage()
+    sim.close()
