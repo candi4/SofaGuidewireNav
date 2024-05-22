@@ -3,6 +3,7 @@ import xmlrpc.client
 import pickle
 import time
 import os
+import platform
 
 # <GuidewireNavRL>/Package/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
@@ -15,7 +16,10 @@ class Client():
     def connect(self, port_rpc):
         self.port_rpc = port_rpc
         # Register the instance to the manager
-        self.server = xmlrpc.client.ServerProxy('http://localhost:' + port_rpc)
+        if platform.system().lower() == 'windows':
+            self.server = xmlrpc.client.ServerProxy('http://127.0.0.1:' + port_rpc)
+        else:
+            self.server = xmlrpc.client.ServerProxy('http://localhost:' + port_rpc)
         print("[SimClient.py] Connected")
     def dataput(self, item):
         # Send data to the server.

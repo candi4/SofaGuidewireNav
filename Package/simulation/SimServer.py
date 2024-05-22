@@ -154,17 +154,5 @@ class SimController():
 
 # For test.
 if __name__ == "__main__":
-    import time
-    import random
-    from Package.utils import SaveImage
-
-    sim = SimController(timeout=10)
-    sim.run()
-    for i in range(250):
-        if i%50 == 1:
-            sim.reset()
-        sim.action(translation=1, rotation=0.1)
-        sim.step(realtime=False)
-        image = sim.GetImage()
-        SaveImage(image=image, filename=root_dir+f'/image/image_{i}.jpg')
-    sim.close()
+    pass
+    
