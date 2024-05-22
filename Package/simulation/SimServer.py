@@ -7,6 +7,13 @@ from xmlrpc.server import SimpleXMLRPCRequestHandler
 import threading
 import queue
 import time
+import pickle
+
+
+# <GuidewireNavRL>/Package/simulation/../../
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
+from Package.utils import mkdir, root_dir
+
 
 class Server():
     def __init__(self, timeout=None):
@@ -39,6 +46,8 @@ class Server():
             return self.len
 
     class Data():
+        """Every method should have non-none return
+        """
         def __init__(self, timeout=None):
             self.timeout = timeout
             self.serverdata = Server.CustomQueue() # server -> client
@@ -65,6 +74,12 @@ class Server():
     def dataget(self):
         # Get some data from the client.
         return self.data.clientget()
+    def dataload(self, filename):
+        # Load data from pkl file.
+        with open(filename, 'rb') as f:
+            item = pickle.load(f)
+        os.remove(filename)
+        return item
     
     class SimpleThreadedXMLRPCServer(SimpleXMLRPCServer):
         pass
@@ -94,40 +109,62 @@ class Server():
         time.sleep(1)
     def waitclientclose(self):
         # exit command was aleady sent
-        self.first_worker_thread.join() # Wait until client.py be finished.
+        self.first_worker_thread.join() # Wait until the client be finished.
         
 
-
+class SimController():
+    def __init__(self, timeout):
+        self.server = Server(timeout=timeout)
+        self.server.start()
+    def exchange(self):
+        pass
+    def reset(self):
+        self.close()
+        self.run()
+    def close(self):
+        # Close the client.
+        order = {'ordername': 'close',
+                    'info': dict()}
+        self.server.dataput(order)
+        self.server.dataget()
+        self.server.waitclientclose()
+    def run(self):
+        # Run the client.
+        self.server.runclient()
+    def action(self, translation=0, rotation=0):
+        order = {'ordername':'action',
+                    'info': {'translation':1,
+                            'rotation':0.1}}
+        self.server.dataput(order)
+        self.server.dataget()
+    def step(self, realtime=False):
+        order = {'ordername': 'step',
+                    'info': {'realtime':realtime}}
+        self.server.dataput(order)
+        self.server.dataget()
+    def GetImage(self):
+        order = {'ordername': 'GetImage',
+                'info': dict()}
+        self.server.dataput(order)
+        filename = self.server.dataget()['data']['filename']
+        image = self.server.dataload(filename=filename)
+        return image
+        
+        
 
 # For test.
 if __name__ == "__main__":
     import time
     import random
+    from Package.utils import SaveImage
 
-    server = Server(timeout=10)
-    server.start()
-
-    
-    i = -1
-    while True:
-        server.runclient()
-
-        command = None
-        while command != 'exit':
-            if random.random() < 0.8: command = 'run'
-            else: command = 'exit'
-            i += 1
-            print('i',i)
-            
-            # Get some data from the client.
-            data = server.dataget()
-            print('client -> server :',data, time.time())
-            
-            # Send some data to the client.
-            data = {'command':command,'time':time.time(), 'i':i}
-            server.dataput(data)
-
-        # Close client. Closing client is decided by server.
-        pass
-
-        server.waitclientclose()
+    sim = SimController(timeout=10)
+    sim.run()
+    for i in range(250):
+        if i%50 == 1:
+            sim.reset()
+        sim.action(translation=1, rotation=0.1)
+        sim.step(realtime=False)
+        image = sim.GetImage()
+        SaveImage(image=image, filename=root_dir+f'/image/image_{i}.jpg')
+    sim.close()

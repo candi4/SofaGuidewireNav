@@ -1,10 +1,13 @@
 import sys
 import xmlrpc.client
+import pickle
+import time
+import os
 
-
-# sys.path.append()
-# os.path.dirname(os.path.abspath(__file__)) + '/SimClient.py'
-# from Package.scene import SOFA, SaveImage
+# <GuidewireNavRL>/Package/simulation/../../
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
+from Package.utils import mkdir, root_dir
+from Package.simulation.scene import SOFA
 
 class Client():
     def __init__(self):
@@ -13,58 +16,57 @@ class Client():
         self.port_rpc = port_rpc
         # Register the instance to the manager
         self.server = xmlrpc.client.ServerProxy('http://localhost:' + port_rpc)
-        print("Connected")
+        print("[SimClient.py] Connected")
     def dataput(self, item):
-        # Send data to server.
+        # Send data to the server.
         return self.server.clientput(item)
     def dataget(self):
-        # Get data from server.
+        # Get data from the server.
         return self.server.serverget()
+    def datasave(self, item, filename):
+        mkdir(filename=filename)
+        with open(filename, 'wb') as f:
+            pickle.dump(item, f)
 
 
 # This is run by runclient() in SimServer.
 if __name__ == "__main__":
-    print("Start SimClient.py")
+    print("[SimClient.py] Start SimClient.py")
     if len(sys.argv) != 2:
-        print("SYNTAX: python client.py port_rpc")
+        print("[SimClient.py] SYNTAX: python client.py port_rpc")
         sys.exit(-1)
     port_rpc = sys.argv[1]
 
     client = Client()
     client.connect(port_rpc)
 
+    # Initialize sofa
+    sofa = SOFA()
+    sofa.step(realtime=False)
 
+    # Work as the order from the server.
+    close = False
+    while not close:
+        # Get order from the server.
+        order = client.dataget()
+        # order = {'ordername': str(), # in str
+        #          'info': dict()}     # in dict
+        response = {'data': dict(),}   # in dict
+        if order['ordername'] == 'close':
+            close = True
+        elif order['ordername'] == 'action':
+            translation = order['info'].get('translation', 0)
+            rotation    = order['info'].get('rotation',    0)
+            sofa.action(translation=translation, rotation=rotation)
+        elif order['ordername'] == 'step':
+            realtime = order['info'].get('realtime', True)
+            sofa.step(realtime=realtime)
+        elif order['ordername'] == 'GetImage':
+            image = sofa.GetImage()
+            filename = root_dir + f'/delete/image_{time.time()}.pkl'
+            client.datasave(item=image, filename=filename)
+            response['data'] = {'filename': filename}
+        # Put response to the server.
+        client.dataput(response)
+    print("[SimClient.py] Close the simulation.")
 
-    # sofa = SOFA()
-    # for i in range(50):
-    #     sofa.action(translation=1,rotation=0.1)
-    #     sofa.step(realtime=False)
-    #     image = sofa.GetImage()
-    #     SaveImage(image, f'image/screen{i%50}.jpg')
-
-
-    # import 
-
-    # sofa = SOFA()
-    # for i in range(50):
-    #     sofa.action(translation=1,rotation=0.1)
-    #     sofa.step(realtime=False)
-    #     image = sofa.GetImage()
-    #     SaveImage(image, f'image/screen{i%50}.jpg')
-
-
-
-
-    import time
-    command = None
-    while command != 'exit':
-        # Send data to server.
-        data = {'state': time.time()}
-        client.dataput(data)
-
-        # Get data from server.
-        data = client.dataget()
-        command = data['command']
-        print('server -> client :',data, time.time())
-
-    print("Exit")
