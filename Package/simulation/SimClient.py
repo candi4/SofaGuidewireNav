@@ -1,10 +1,13 @@
 import sys
 import xmlrpc.client
+import pickle
+import time
+import os
 
-
-# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-# os.path.dirname(os.path.abspath(__file__)) + '/SimClient.py'
-from scene import SOFA#, SaveImage
+# <GuidewireNavRL>/Package/simulation/../../
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
+from Package.utils import mkdir, root_dir
+from Package.simulation.scene import SOFA
 
 class Client():
     def __init__(self):
@@ -20,9 +23,10 @@ class Client():
     def dataget(self):
         # Get data from the server.
         return self.server.serverget()
-
-def saveData(data):
-    pass
+    def datasave(self, item, filename):
+        mkdir(filename=filename)
+        with open(filename, 'wb') as f:
+            pickle.dump(item, f)
 
 
 # This is run by runclient() in SimServer.
@@ -59,7 +63,9 @@ if __name__ == "__main__":
             sofa.step(realtime=realtime)
         elif order['ordername'] == 'GetImage':
             image = sofa.GetImage()
-            response['data'] = {'image': image}
+            filename = root_dir + f'/delete/image_{time.time()}.pkl'
+            client.datasave(item=image, filename=filename)
+            response['data'] = {'filename': filename}
         # Put response to the server.
         client.dataput(response)
     print("[SimClient.py] Close the simulation.")

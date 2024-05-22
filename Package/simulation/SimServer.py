@@ -7,6 +7,13 @@ from xmlrpc.server import SimpleXMLRPCRequestHandler
 import threading
 import queue
 import time
+import pickle
+
+
+# <GuidewireNavRL>/Package/simulation/../../
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
+from Package.utils import mkdir, root_dir
+
 
 class Server():
     def __init__(self, timeout=None):
@@ -39,6 +46,8 @@ class Server():
             return self.len
 
     class Data():
+        """Every method should have non-none return
+        """
         def __init__(self, timeout=None):
             self.timeout = timeout
             self.serverdata = Server.CustomQueue() # server -> client
@@ -65,6 +74,12 @@ class Server():
     def dataget(self):
         # Get some data from the client.
         return self.data.clientget()
+    def dataload(self, filename):
+        # Load data from pkl file.
+        with open(filename, 'rb') as f:
+            item = pickle.load(f)
+        os.remove(filename)
+        return item
     
     class SimpleThreadedXMLRPCServer(SimpleXMLRPCServer):
         pass
@@ -98,8 +113,9 @@ class Server():
         
 
 class SimController():
-    def __init__(self, server):
-        self.server = server
+    def __init__(self, timeout):
+        self.server = Server(timeout=timeout)
+        self.server.start()
     def exchange(self):
         pass
     def reset(self):
@@ -130,13 +146,8 @@ class SimController():
         order = {'ordername': 'GetImage',
                 'info': dict()}
         self.server.dataput(order)
-        image = self.server.dataget()
-        return image
-    def GetImage_new(self):
-        order = {'ordername': 'GetImage',
-                'info': dict()}
-        self.server.dataput(order)
-        image = self.server.dataget()
+        filename = self.server.dataget()['data']['filename']
+        image = self.server.dataload(filename=filename)
         return image
         
         
@@ -145,16 +156,15 @@ class SimController():
 if __name__ == "__main__":
     import time
     import random
+    from Package.utils import SaveImage
 
-    server = Server(timeout=10)
-    server.start()
-
-    sim = SimController(server)
+    sim = SimController(timeout=10)
     sim.run()
     for i in range(250):
         if i%50 == 1:
             sim.reset()
         sim.action(translation=1, rotation=0.1)
         sim.step(realtime=False)
-        # image = sim.GetImage()
+        image = sim.GetImage()
+        SaveImage(image=image, filename=root_dir+f'/image/image_{i}.jpg')
     sim.close()

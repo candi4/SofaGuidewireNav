@@ -258,10 +258,6 @@ class SOFA():
             self.root.InstrumentCombined.m_ircontroller.findData('rotationInstrument').value \
             + np.array([0,rotation,0], dtype=float)
         
-    def reset(self):
-        del self
-        return SOFA()
-    
 
     def visualize(self):
         """Render camera of root onto pygame.
