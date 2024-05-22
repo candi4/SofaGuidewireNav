@@ -8,7 +8,7 @@ import threading
 import queue
 import time
 import pickle
-
+import numpy as np
 
 # <GuidewireNavRL>/Package/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
@@ -113,14 +113,14 @@ class Server():
         
 
 class SimController():
-    def __init__(self, timeout):
+    def __init__(self, timeout=None):
         self.server = Server(timeout=timeout)
         self.server.start()
     def exchange(self):
         pass
     def reset(self):
         self.close()
-        self.run()
+        self.open()
     def close(self):
         # Close the client.
         order = {'ordername': 'close',
@@ -128,7 +128,7 @@ class SimController():
         self.server.dataput(order)
         self.server.dataget()
         self.server.waitclientclose()
-    def run(self):
+    def open(self):
         # Run the client.
         self.server.runclient()
     def action(self, translation=0, rotation=0):
@@ -142,7 +142,7 @@ class SimController():
                     'info': {'realtime':realtime}}
         self.server.dataput(order)
         self.server.dataget()
-    def GetImage(self):
+    def GetImage(self) -> np.ndarray:
         order = {'ordername': 'GetImage',
                 'info': dict()}
         self.server.dataput(order)

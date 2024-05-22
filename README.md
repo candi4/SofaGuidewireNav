@@ -45,33 +45,39 @@ Found SofaPython3.dll in C:\Users\user\SOFA_v23.06.00_Win64\plugins\SofaPython3\
 ```
 If the output appears as shown above, you can use SOFA via python.
 
-
-### 6. Install requirements
-Navigate to the SOFA directory, activate your virtual environment, and enter the following command.
+### 6. Clone this repository
+Navigate to preferred directory and clone this repository.
 ```
-pip install -r requirements.txt # In SOFA_RL directory, Within vitual environment
+git clone https://github.com/candi4/GuidewireNavRL.git
+```
+Or download and unzip the repository.   
+   1. Navigate to the [main page of the repository](https://github.com/candi4/GuidewireNavRL). 
+   2. Above the list of files, click `<> Code`. 
+   3. Click `Download ZIP`. 
+   4. Move the zip file to preferred directory and unzip. 
+
+### 7. Install requirements
+Navigate to the GuidewireNavRL directory, activate your virtual environment, and enter the following command.
+```
+pip install -r requirements.txt
 ```
 Then, the python modules listed in `requirements.txt` will be installed in your virtual environment.
 
-### 7. Recommended installations
+### 8. Recommended installations
 Other things to install for convenience   
 - [Visual Studio Code (vscode)](https://code.visualstudio.com/): Convinent tool for editing codes. Additionally, install the `Python` extension in vscode for a python programming interface.
 
 ## How to use   
 How to use:
-1. Download the codes.
-   * Navigate to the [main page of the repository](https://github.com/candi4/GuidewireNavRL). 
-   * Above the list of files, click Code. 
-   * Click Download ZIP. 
-   * Move the zip file to preferred directory and unzip. 
-2. Make your own python code into the directory \<GuidewireNavRL>.   
-   * You only need to use four methods: `action`, `step`, `GetImage`, `reset`.   
+1. Make your own python code into the directory \<GuidewireNavRL>.   
+   * You only need to use four methods: `action`, `step`, `GetImage`, `reset`.
+      * `open`: Opens the simulation.
+      * `close`: Closes the simulation.
+      * `reset`: Resets the simulation to its initial state. 
       * `action`: Moves the guidewire in the simulation.   
       * `step`: Calculates dynamics in the simulation for one step.   
-      * `GetImage`: Takes a picture of the simulation.   
-      * `reset`: Resets the simulation to its initial state.   
-      * `SaveImage`: Saves the image on the computer (Optional).   
-3. Run your code. 
+      * `GetImage`: Takes a picture of the simulation.      
+2. Run your code. 
    ```
    python <your_python_file>
    ```
@@ -79,16 +85,19 @@ How to use:
 You can refer [basic_example.py](basic_example.py).   
    * First, import the module.   
       ```
-      from Package.scene import SOFA, SaveImage
+      from Package.simulation.SimServer import SimController
       ```
-   * Second, create an object `sofa` using the class `SOFA`.
+   * Second, create an object `sim` using the class `SimController`.
       ```
-      sofa = SOFA()
+      sim = SimController(timeout=10)
       ```
-   * Third, during the loop, use `self.action`, `self.step`, `self.GetImage`, and `self.reset`.   
+   * Third, during the loop, use `sim.action`, `sim.step`, `sim.GetImage`, and `sim.reset`.   
       ```
-      for i in range(10000):
+      sim.open()
+      for i in range(500):
          ...
+
+      sim.close()
       ```
 You can see the simulation screen while running [basic_example.py](basic_example.py) by running `python basic_example.py` within your conda virtual environment `sofarl`.   
 <img src="readme_files/example.gif">

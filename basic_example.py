@@ -2,7 +2,7 @@ from Package.simulation.SimServer import SimController
 from Package.utils import SaveImage
 
 sim = SimController(timeout=10)
-sim.run()
+sim.open()
 for i in range(500):
     if i == 1:
         sim.reset()
