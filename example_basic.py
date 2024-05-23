@@ -1,5 +1,5 @@
-from Package.simulation.SimServer import SimController
-from Package.utils import SaveImage
+from SofaGuidewireNav.simulation.SimServer import SimController
+from SofaGuidewireNav.utils import SaveImage
 
 sim = SimController(timeout=10)
 sim.open()

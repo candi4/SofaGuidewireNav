@@ -84,7 +84,7 @@ Other things to install for convenience
 - You can refer [example_basic.py](example_basic.py).   
    * First, import the module.   
       ```
-      from Package.simulation.SimServer import SimController
+      from SofaGuidewireNav.simulation.SimServer import SimController
       ```
    * Second, create an object `sim` using the class `SimController`.
       ```
@@ -102,7 +102,7 @@ Other things to install for convenience
  <img src="readme_files/example.gif">
 
 ### Option 2. As an installed package
-1. Move SofaGuidewireNav into directory `%anaconda3%\envs\sofarl\Lib\site-packages`.
+1. Move SofaGuidewireNav into directory `%anaconda3%\envs\sofarl\Lib\site-packages` or `%anaconda3%\envs\sofarl\lib\python3.8\site-packages`.
 2. Make your own python code into any preferred directory.
    * You only need to use four methods: `action`, `step`, `GetImage`, `reset`.
       * `open`: Opens the simulation.
