@@ -5,10 +5,10 @@ import time
 import os
 import platform
 
-# <GuidewireNavRL>/Package/simulation/../../
+# <SofaGuidewireNav>/SofaGuidewireNav/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
-from Package.utils import mkdir, root_dir, clear_folder
-from Package.simulation.scene import SOFA
+from SofaGuidewireNav.utils import mkdir, root_dir, clear_folder
+from SofaGuidewireNav.simulation.scene import SOFA
 
 class Client():
     def __init__(self):
@@ -41,7 +41,7 @@ class SimManager():
         self.orderdict = None
         self.response = None
         # prepare directory used for communication
-        self.commu_dir = root_dir + '/remove'
+        self.commu_dir = root_dir + '/cache'
         clear_folder(directory=self.commu_dir)
         # sofa
         self.sofa = SOFA()

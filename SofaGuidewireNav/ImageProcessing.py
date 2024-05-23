@@ -3,7 +3,7 @@ import os
 import PIL.Image
 import sys
 
-# <GuidewireNavRL>/Package/../
+# <SofaGuidewireNav>/SofaGuidewireNav/../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../")
-from Package.utils import mkdir
+from SofaGuidewireNav.utils import mkdir
 
