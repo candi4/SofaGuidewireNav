@@ -123,29 +123,29 @@ class SimController():
         self.open()
     def close(self):
         # Close the client.
-        order = {'ordername': 'close',
+        orderdict = {'order': 'close',
                     'info': dict()}
-        self.server.dataput(order)
+        self.server.dataput(orderdict)
         self.server.dataget()
         self.server.waitclientclose()
     def open(self):
         # Run the client.
         self.server.runclient()
     def action(self, translation=0, rotation=0):
-        order = {'ordername':'action',
+        orderdict = {'order':'action',
                     'info': {'translation':1,
                             'rotation':0.1}}
-        self.server.dataput(order)
+        self.server.dataput(orderdict)
         self.server.dataget()
     def step(self, realtime=False):
-        order = {'ordername': 'step',
+        orderdict = {'order': 'step',
                     'info': {'realtime':realtime}}
-        self.server.dataput(order)
+        self.server.dataput(orderdict)
         self.server.dataget()
     def GetImage(self) -> np.ndarray:
-        order = {'ordername': 'GetImage',
+        orderdict = {'order': 'GetImage',
                 'info': dict()}
-        self.server.dataput(order)
+        self.server.dataput(orderdict)
         filename = self.server.dataget()['data']['filename']
         image = self.server.dataload(filename=filename)
         return image

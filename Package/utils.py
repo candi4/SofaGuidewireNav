@@ -2,6 +2,8 @@ import os
 import numpy as np
 import PIL.Image
 
+# >>> Related file/folder/directory >>>
+
 def mkdir(filename: str):
     """make directory 
     filename can include a file e.g. dir/file.py.
@@ -20,7 +22,20 @@ def mkdir(filename: str):
         if not os.path.exists(directory):
             os.makedirs(directory)
 
-def upper_directory(filename, step=0):
+def clear_folder(directory):
+    """
+    input param
+        directory : (str) directory to clear. e.g. dir1/dir2 not dir1/dir2/
+    """
+    directory
+    import os, glob
+
+    # Loop over all files and delete them one by one
+    for file in glob.glob(directory+"/*"):
+        os.remove(file)
+        print("Deleted " + str(file))
+
+def upper_directory(filename, step=0) -> str:
     """ex. when step=0,
     directory/filename.exe -> directory
     dir1/dir2/ -> dir1/dir2
@@ -40,6 +55,8 @@ def SaveImage(image:np.ndarray, filename:str):
 
     im = PIL.Image.fromarray(image)
     im.save(filename)
+
+# <<< Related file/folder/directory <<<
 
 if __name__ == "__main__":
     print(root_dir)

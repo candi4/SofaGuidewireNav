@@ -7,7 +7,7 @@ import platform
 
 # <GuidewireNavRL>/Package/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
-from Package.utils import mkdir, root_dir
+from Package.utils import mkdir, root_dir, clear_folder
 from Package.simulation.scene import SOFA
 
 class Client():
@@ -32,6 +32,53 @@ class Client():
         with open(filename, 'wb') as f:
             pickle.dump(item, f)
 
+class SimManager():
+    def __init__(self, port_rpc):
+        # communication
+        self.port_rpc = port_rpc
+        self.client = Client()
+        self.client.connect(port_rpc)
+        self.orderdict = None
+        self.response = None
+        # prepare directory used for communication
+        self.commu_dir = root_dir + '/remove'
+        clear_folder(directory=self.commu_dir)
+        # sofa
+        self.sofa = SOFA()
+        self.sofa.step(realtime=False)
+    def getorder(self):
+        """Get order from the server.
+        orderdict = {'order': str(), # in str
+                 'info': dict()}     # in dict
+        """
+        self.orderdict = self.client.dataget()
+        self.response = {'data': dict(),}
+    def execute(self):
+        # Do proper process for order
+        order = self.orderdict.get('order', None)
+        close = False
+        if order == 'close':
+            close = True
+        elif order == 'action':
+            translation = self.orderdict['info'].get('translation', 0)
+            rotation    = self.orderdict['info'].get('rotation',    0)
+            self.sofa.action(translation=translation, rotation=rotation)
+        elif order == 'step':
+            realtime = self.orderdict['info'].get('realtime', True)
+            self.sofa.step(realtime=realtime)
+        elif order == 'GetImage':
+            image = self.sofa.GetImage()
+            filename = self.commu_dir + f'/image_{time.time()}.pkl'
+            self.client.datasave(item=image, filename=filename)
+            self.response['data'] = {'filename': filename}
+        else:
+            raise Exception(f"Improper order. self.orderdict = {self.orderdict}")
+        return close
+    def respond(self):
+        """Put response to the server.
+        """
+        self.client.dataput(self.response)
+
 
 # This is run by runclient() in SimServer.
 if __name__ == "__main__":
@@ -40,37 +87,14 @@ if __name__ == "__main__":
         print("[SimClient.py] SYNTAX: python client.py port_rpc")
         sys.exit(-1)
     port_rpc = sys.argv[1]
-
-    client = Client()
-    client.connect(port_rpc)
-
-    # Initialize sofa
-    sofa = SOFA()
-    sofa.step(realtime=False)
-
+    simmanager = SimManager(port_rpc=port_rpc)
+    
     # Work as the order from the server.
     close = False
     while not close:
         # Get order from the server.
-        order = client.dataget()
-        # order = {'ordername': str(), # in str
-        #          'info': dict()}     # in dict
-        response = {'data': dict(),}   # in dict
-        if order['ordername'] == 'close':
-            close = True
-        elif order['ordername'] == 'action':
-            translation = order['info'].get('translation', 0)
-            rotation    = order['info'].get('rotation',    0)
-            sofa.action(translation=translation, rotation=rotation)
-        elif order['ordername'] == 'step':
-            realtime = order['info'].get('realtime', True)
-            sofa.step(realtime=realtime)
-        elif order['ordername'] == 'GetImage':
-            image = sofa.GetImage()
-            filename = root_dir + f'/delete/image_{time.time()}.pkl'
-            client.datasave(item=image, filename=filename)
-            response['data'] = {'filename': filename}
-        # Put response to the server.
-        client.dataput(response)
+        simmanager.getorder()
+        close = simmanager.execute()
+        simmanager.respond()
     print("[SimClient.py] Close the simulation.")
 
