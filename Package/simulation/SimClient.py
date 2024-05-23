@@ -5,7 +5,7 @@ import time
 import os
 import platform
 
-# <GuidewireNavRL>/Package/simulation/../../
+# <SofaGuidewireNav>/Package/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
 from Package.utils import mkdir, root_dir, clear_folder
 from Package.simulation.scene import SOFA

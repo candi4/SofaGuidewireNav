@@ -1,4 +1,4 @@
-# GuidewireNavRL
+# SofaGuidewireNav
 Use [SOFA framework](https://github.com/sofa-framework/sofa) with Reinforcement Learning (RL) for guidewire navigation.
 
 
@@ -48,16 +48,16 @@ If the output appears as shown above, you can use SOFA via python.
 ### 6. Clone this repository
 Navigate to preferred directory and clone this repository.
 ```
-git clone https://github.com/candi4/GuidewireNavRL.git
+git clone https://github.com/candi4/SofaGuidewireNav.git
 ```
 Or download and unzip the repository.   
-   1. Navigate to the [main page of the repository](https://github.com/candi4/GuidewireNavRL). 
+   1. Navigate to the [main page of the repository](https://github.com/candi4/SofaGuidewireNav). 
    2. Above the list of files, click `<> Code`. 
    3. Click `Download ZIP`. 
    4. Move the zip file to preferred directory and unzip. 
 
 ### 7. Install requirements
-Navigate to the GuidewireNavRL directory, activate your virtual environment, and enter the following command.
+Navigate to the SofaGuidewireNav directory, activate your virtual environment, and enter the following command.
 ```
 pip install -r requirements.txt
 ```
@@ -69,7 +69,7 @@ Other things to install for convenience
 
 ## How to use   
 How to use:
-1. Make your own python code into the directory \<GuidewireNavRL>.   
+1. Make your own python code into the directory \<SofaGuidewireNav>.   
    * You only need to use four methods: `action`, `step`, `GetImage`, `reset`.
       * `open`: Opens the simulation.
       * `close`: Closes the simulation.

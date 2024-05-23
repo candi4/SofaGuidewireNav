@@ -40,7 +40,7 @@ def upper_directory(filename, step=0) -> str:
     directory/filename.exe -> directory
     dir1/dir2/ -> dir1/dir2
     dir1/dir2 -> dir1
-    <GuidewireNavRL>/Package/utils.py -> <GuidewireNavRL>/Package
+    <SofaGuidewireNav>/Package/utils.py -> <SofaGuidewireNav>/Package
     """
     directory = os.path.dirname(filename)
     for i in range(step):
@@ -61,4 +61,4 @@ def SaveImage(image:np.ndarray, filename:str):
 if __name__ == "__main__":
     print(root_dir)
     print(os.path.abspath(__file__))
-    print(upper_directory('<GuidewireNavRL>/Package/utils.py'))
+    print(upper_directory('<SofaGuidewireNav>/Package/utils.py'))
