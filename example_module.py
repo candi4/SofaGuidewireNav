@@ -1,5 +1,5 @@
-from SofaGuidewireNav import SimController
-from SofaGuidewireNav.utils import SaveImage
+from SofaGW import SimController
+from SofaGW.utils import SaveImage
 
 sim = SimController(timeout=10)
 sim.open()

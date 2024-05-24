@@ -5,10 +5,10 @@ import time
 import os
 import platform
 
-# <SofaGuidewireNav>/SofaGuidewireNav/simulation/../../
+# <SofaGuidewireNav>/SofaGW/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
-from SofaGuidewireNav.utils import mkdir, root_dir, clear_folder
-from SofaGuidewireNav.simulation.scene import SOFA
+from SofaGW.utils import mkdir, root_dir, clear_folder
+from SofaGW.simulation.scene import SOFA
 
 class Client():
     def __init__(self):

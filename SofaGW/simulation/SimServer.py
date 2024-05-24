@@ -10,9 +10,9 @@ import time
 import pickle
 import numpy as np
 
-# <SofaGuidewireNav>/SofaGuidewireNav/simulation/../../
+# <SofaGuidewireNav>/SofaGW/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
-from SofaGuidewireNav.utils import mkdir, root_dir
+from SofaGW.utils import mkdir, root_dir
 
 
 class Server():

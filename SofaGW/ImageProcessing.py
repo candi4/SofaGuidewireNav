@@ -3,7 +3,7 @@ import os
 import PIL.Image
 import sys
 
-# <SofaGuidewireNav>/SofaGuidewireNav/../
+# <SofaGuidewireNav>/SofaGW/../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../")
-from SofaGuidewireNav.utils import mkdir
+from SofaGW.utils import mkdir
 
