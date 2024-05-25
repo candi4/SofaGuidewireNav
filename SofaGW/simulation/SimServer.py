@@ -12,7 +12,7 @@ import numpy as np
 
 # <SofaGuidewireNav>/SofaGW/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
-from SofaGW.utils import mkdir, root_dir
+from SofaGW.utils import mkdir, root_dir, abspath
 
 
 class Server():
@@ -98,12 +98,13 @@ class Server():
         server_thread = threading.Thread(target=dispatch, args=(self.port_rpc,self.data))
         server_thread.daemon = True
         server_thread.start()
-    def runclient(self):
+    def runclient(self, vessel_filename):
         # Run the client
-        def deferredStart(path, port_rpc):
-            subprocess.run([sys.executable, path, str(port_rpc)],
+        def deferredStart(path, port_rpc, vessel_filename):
+            vessel_filename = abspath(vessel_filename)
+            subprocess.run([sys.executable, path, str(port_rpc), vessel_filename],
                             check=True)
-        self.first_worker_thread = threading.Thread(target=deferredStart, args=(self.clientfile, self.port_rpc))
+        self.first_worker_thread = threading.Thread(target=deferredStart, args=(self.clientfile, self.port_rpc, vessel_filename))
         self.first_worker_thread.daemon = True
         self.first_worker_thread.start()
         time.sleep(1)
@@ -113,15 +114,24 @@ class Server():
         
 
 class SimController():
-    def __init__(self, timeout=None):
+    def __init__(self, vessel_filename, timeout=None):
+        self.vessel_filename = vessel_filename
         self.server = Server(timeout=timeout)
         self.server.start()
-        self.open()
-    def exchange(self):
-        pass
-    def reset(self):
+        self.open(vessel_filename=vessel_filename)
+    def exchange(self, orderdict):
+        # implement this
+        self.server.dataput(orderdict)
+        return self.server.dataget()
+    def reset(self, vessel_filename=None):
+        """
+        input param
+            vessel_filename : (str | None) If None, use the last file name.
+        """
+        if vessel_filename is None:
+            vessel_filename = self.vessel_filename
         self.close()
-        self.open()
+        self.open(vessel_filename=vessel_filename)
     def close(self):
         # Close the client.
         orderdict = {'order': 'close',
@@ -129,9 +139,9 @@ class SimController():
         self.server.dataput(orderdict)
         self.server.dataget()
         self.server.waitclientclose()
-    def open(self):
+    def open(self, vessel_filename):
         # Run the client.
-        self.server.runclient()
+        self.server.runclient(vessel_filename=vessel_filename)
     def action(self, translation=0, rotation=0):
         orderdict = {'order':'action',
                     'info': {'translation':1,

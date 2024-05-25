@@ -1,7 +1,10 @@
 from SofaGW.simulation.SimServer import SimController
 from SofaGW.utils import SaveImage
 
-sim = SimController(timeout=10)
+vessel_filename = 'vessel/phantom.obj'
+
+sim = SimController(timeout=10,
+                    vessel_filename=vessel_filename)
 for i in range(500):
     if i == 1:
         sim.reset()
