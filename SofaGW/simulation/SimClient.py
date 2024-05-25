@@ -5,10 +5,10 @@ import time
 import os
 import platform
 
-# <SofaGuidewireNav>/SofaGuidewireNav/simulation/../../
+# <SofaGuidewireNav>/SofaGW/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
-from SofaGuidewireNav.utils import mkdir, root_dir, clear_folder
-from SofaGuidewireNav.simulation.scene import SOFA
+from SofaGW.utils import mkdir, root_dir, clear_folder
+from SofaGW.simulation.scene import SOFA
 
 class Client():
     def __init__(self):
@@ -33,8 +33,9 @@ class Client():
             pickle.dump(item, f)
 
 class SimManager():
-    def __init__(self, port_rpc):
+    def __init__(self, port_rpc, vessel_filename):
         # communication
+        self.vessel_filename = vessel_filename
         self.port_rpc = port_rpc
         self.client = Client()
         self.client.connect(port_rpc)
@@ -44,8 +45,7 @@ class SimManager():
         self.commu_dir = root_dir + '/cache'
         clear_folder(directory=self.commu_dir)
         # sofa
-        self.sofa = SOFA()
-        self.sofa.step(realtime=False)
+        self.sofa = SOFA(vessel_filename=vessel_filename)
     def getorder(self):
         """Get order from the server.
         orderdict = {'order': str(), # in str
@@ -83,11 +83,12 @@ class SimManager():
 # This is run by runclient() in SimServer.
 if __name__ == "__main__":
     print("[SimClient.py] Start SimClient.py")
-    if len(sys.argv) != 2:
-        print("[SimClient.py] SYNTAX: python client.py port_rpc")
+    if len(sys.argv) != 3:
+        print("[SimClient.py] SYNTAX: python client.py port_rpc vessel_filename")
         sys.exit(-1)
     port_rpc = sys.argv[1]
-    simmanager = SimManager(port_rpc=port_rpc)
+    vessel_filename = sys.argv[2]
+    simmanager = SimManager(port_rpc=port_rpc, vessel_filename=vessel_filename)
     
     # Work as the order from the server.
     close = False

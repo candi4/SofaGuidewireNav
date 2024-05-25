@@ -1,8 +1,8 @@
-from SofaGuidewireNav import SimController
-from SofaGuidewireNav.utils import SaveImage
+from SofaGW import SimController
+from SofaGW.utils import SaveImage
 
-sim = SimController(timeout=10)
-sim.open()
+sim = SimController(timeout=10,
+                    vessel_filename='vessel/phantom.obj')
 for i in range(500):
     if i == 1:
         sim.reset()

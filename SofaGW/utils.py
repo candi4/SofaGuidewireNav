@@ -40,7 +40,7 @@ def upper_directory(filename, step=0) -> str:
     directory/filename.exe -> directory
     dir1/dir2/ -> dir1/dir2
     dir1/dir2 -> dir1
-    <SofaGuidewireNav>/SofaGuidewireNav/utils.py -> <SofaGuidewireNav>/SofaGuidewireNav
+    <SofaGuidewireNav>/SofaGW/utils.py -> <SofaGuidewireNav>/SofaGW
     """
     directory = os.path.dirname(filename)
     for i in range(step):
@@ -56,9 +56,17 @@ def SaveImage(image:np.ndarray, filename:str):
     im = PIL.Image.fromarray(image)
     im.save(filename)
 
+def abspath(filename):
+    """Convert to absolute directory. Input can be both an absolute directory and a relative directory.
+    The root of relative directory is workspace, where *.py file is run.
+    """
+    return os.path.abspath(filename)
+
 # <<< Related file/folder/directory <<<
 
 if __name__ == "__main__":
     print(root_dir)
     print(os.path.abspath(__file__))
-    print(upper_directory('<SofaGuidewireNav>/SofaGuidewireNav/utils.py'))
+    print(upper_directory('<SofaGuidewireNav>/SofaGW/utils.py'))
+    print(abspath(r'C:\Users\82105\Dropbox\working\code_temp\SofaGuidewireNav\SofaGW\utils.py'))
+    print(abspath(r'utils.py'))

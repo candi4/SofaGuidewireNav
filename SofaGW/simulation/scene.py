@@ -14,9 +14,9 @@ import OpenGL.GLU
 
 # For using SOFA.
 class SOFA():
-    def __init__(self):
+    def __init__(self, vessel_filename):
         self.display_size = (640, 480)
-        self.vessel_filename = os.path.dirname(os.path.abspath(__file__)) + '/../../vessel/phantom.obj'
+        self.vessel_filename = vessel_filename
         self.start_scene()
 
     def start_scene(self):
@@ -301,50 +301,12 @@ class SOFA():
         image = np.flipud(image)
         return image
 
-# def SaveImage(image:np.ndarray, filename:str):
-#     if '/' in filename or '\\' in filename:
-#         idx_slash = filename[::-1].find('/')
-#         idx_islash = filename[::-1].find('\\')
-#         # The last thing is '/'
-#         if idx_islash == -1 or 0 <= idx_slash < idx_islash: 
-#             idx = idx_slash - len(filename)
-#         # The last thing is '\\'
-#         else:
-#             idx = idx_islash - len(filename)
-
-#         directory = filename[:-idx]
-#         if not os.path.exists(directory):
-#             os.makedirs(directory)
-            
-#     im = PIL.Image.fromarray(image)
-#     im.save(filename)
-        
-
-
-# # Environment made with gymnasium for RL.
-# import gymnasium as gym
-# class sofaenv(gym.Env):
-#     pass
 
 # # Make custom environment with gymnasium
 # # https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/ 
 # # https://colab.research.google.com/github/araffin/rl-tutorial-jnrr19/blob/master/5_custom_gym_env.ipynb#scrollTo=PQfLBE28SNDr 
 # # https://stable-baselines3.readthedocs.io/en/master/guide/custom_env.html 
 # # 나중에 sofa github에 ubuntu server에서 soaf interactiva camera로 이미지 저장할 수 있는 방법 묻기.
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
 
 
 

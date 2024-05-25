@@ -71,12 +71,11 @@ Other things to install for convenience
 ### Option 1. In the repository   
 1. Make your own python code into the directory \<SofaGuidewireNav>.   
    * You only need to use four methods: `action`, `step`, `GetImage`, `reset`.
-      * `open`: Opens the simulation.
-      * `close`: Closes the simulation.
-      * `reset`: Resets the simulation to its initial state. 
       * `action`: Moves the guidewire in the simulation.   
       * `step`: Calculates dynamics in the simulation for one step.   
       * `GetImage`: Takes a picture of the simulation.      
+      * `reset`: Resets the simulation to its initial state. 
+      * `close`: Closes the simulation.   
 2. Run your code. 
    ```
    python <your_python_file>
@@ -84,15 +83,15 @@ Other things to install for convenience
 - You can refer [example_basic.py](example_basic.py).   
    * First, import the module.   
       ```
-      from SofaGuidewireNav.simulation.SimServer import SimController
+      from SofaGW.simulation.SimServer import SimController
       ```
    * Second, create an object `sim` using the class `SimController`.
       ```
-      sim = SimController(timeout=10)
+      sim = SimController(timeout=10,
+                          vessel_filename='vessel/phantom.obj')
       ```
    * Third, during the loop, use `sim.action`, `sim.step`, `sim.GetImage`, and `sim.reset`.   
       ```
-      sim.open()
       for i in range(500):
          ...
 
@@ -100,6 +99,40 @@ Other things to install for convenience
       ```
  - You can see the simulation screen while running [example_basic.py](example_basic.py) by running `python example_basic.py` within your conda virtual environment `sofarl`.   
  <img src="readme_files/example.gif">
+
+### Option 2. As an installed package
+1. Move `%SofaGuidewireNav%\SofaGW` into the directory `%anaconda3%\envs\sofarl\Lib\site-packages` or `%anaconda3%\envs\sofarl\lib\python3.8\site-packages`.
+2. Make your own python code into any preferred directory.
+   * You only need to use four methods: `action`, `step`, `GetImage`, `reset`.
+      * `action`: Moves the guidewire in the simulation.   
+      * `step`: Calculates dynamics in the simulation for one step.   
+      * `GetImage`: Takes a picture of the simulation.      
+      * `reset`: Resets the simulation to its initial state. 
+      * `close`: Closes the simulation.   
+3. Run your code. 
+   ```
+   python <your_python_file>
+   ```   
+- You can refer [example_module.py](example_module.py).   
+   * First, import the module.   
+      ```
+      from SofaGW import SimController
+      ```
+   * Second, create an object `sim` using the class `SimController`.
+      ```
+      sim = SimController(timeout=10,
+                          vessel_filename='vessel/phantom.obj')
+      ```
+   * Third, during the loop, use `sim.action`, `sim.step`, `sim.GetImage`, and `sim.reset`.   
+      ```
+      for i in range(500):
+         ...
+
+      sim.close()
+      ```
+ - You can see the simulation screen while running [example_module.py](example_module.py) by running `python example_module.py` within your conda virtual environment `sofarl`.   
+ <img src="readme_files/example.gif">
+
 
 ## Task
 **Task:** Create an RL model that controls the guidewire to target a specific exit.   
