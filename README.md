@@ -87,7 +87,8 @@ Other things to install for convenience
       ```
    * Second, create an object `sim` using the class `SimController`.
       ```
-      sim = SimController(timeout=10)
+      sim = SimController(timeout=10,
+                          vessel_filename='vessel/phantom.obj')
       ```
    * Third, during the loop, use `sim.action`, `sim.step`, `sim.GetImage`, and `sim.reset`.   
       ```
@@ -119,7 +120,8 @@ Other things to install for convenience
       ```
    * Second, create an object `sim` using the class `SimController`.
       ```
-      sim = SimController(timeout=10)
+      sim = SimController(timeout=10,
+                          vessel_filename='vessel/phantom.obj')
       ```
    * Third, during the loop, use `sim.action`, `sim.step`, `sim.GetImage`, and `sim.reset`.   
       ```
