@@ -116,6 +116,7 @@ class SimController():
     def __init__(self, timeout=None):
         self.server = Server(timeout=timeout)
         self.server.start()
+        self.open()
     def exchange(self):
         pass
     def reset(self):

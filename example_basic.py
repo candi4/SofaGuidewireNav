@@ -2,7 +2,6 @@ from SofaGW.simulation.SimServer import SimController
 from SofaGW.utils import SaveImage
 
 sim = SimController(timeout=10)
-sim.open()
 for i in range(500):
     if i == 1:
         sim.reset()
