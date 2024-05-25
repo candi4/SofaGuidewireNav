@@ -45,7 +45,6 @@ class SimManager():
         clear_folder(directory=self.commu_dir)
         # sofa
         self.sofa = SOFA()
-        self.sofa.step(realtime=False)
     def getorder(self):
         """Get order from the server.
         orderdict = {'order': str(), # in str
