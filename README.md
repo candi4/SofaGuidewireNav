@@ -109,6 +109,7 @@ Other things to install for convenience
       * `GetImage`: Takes a picture of the simulation.      
       * `reset`: Resets the simulation to its initial state. 
       * `close`: Closes the simulation.   
+    * Additionally, You have to make sure the parameter `vessel_filename` of `SimController` points the correct directory.
 3. Run your code. 
    ```
    python <your_python_file>
