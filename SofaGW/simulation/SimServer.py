@@ -12,7 +12,7 @@ import numpy as np
 
 # <SofaGuidewireNav>/SofaGW/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
-from SofaGW.utils import mkdir, root_dir, abspath
+from SofaGW.utils import abspath
 
 
 class Server():

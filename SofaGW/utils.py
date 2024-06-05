@@ -47,7 +47,7 @@ def upper_directory(filename, step=0) -> str:
         directory = os.path.dirname(directory)
     return directory
 
-root_dir = upper_directory(os.path.abspath(__file__), 1)
+root_dir = upper_directory(os.path.abspath(__file__), 0)
 
 
 def SaveImage(image:np.ndarray, filename:str):
