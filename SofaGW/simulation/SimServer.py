@@ -142,8 +142,8 @@ class SimController():
         self.server.runclient(vessel_filename=vessel_filename)
     def action(self, translation=0, rotation=0):
         orderdict = {'order':'action',
-                    'info': {'translation':1,
-                            'rotation':0.1}}
+                    'info': {'translation':translation,
+                            'rotation':rotation}}
         self.exchange(orderdict)
     def step(self, realtime=False):
         orderdict = {'order': 'step',

@@ -251,11 +251,11 @@ class SOFA():
 
 
     def action(self, translation=0, rotation=0):
-        self.root.InstrumentCombined.m_ircontroller.findData('xtip').value =\
-            self.root.InstrumentCombined.m_ircontroller.findData('xtip').value \
+        self.root.InstrumentCombined.m_ircontroller.findData('xtip').value \
+            = self.root.InstrumentCombined.m_ircontroller.findData('xtip').value \
             + np.array([0,translation,0], dtype=float)
-        self.root.InstrumentCombined.m_ircontroller.findData('rotationInstrument').value =\
-            self.root.InstrumentCombined.m_ircontroller.findData('rotationInstrument').value \
+        self.root.InstrumentCombined.m_ircontroller.findData('rotationInstrument').value \
+            = self.root.InstrumentCombined.m_ircontroller.findData('rotationInstrument').value \
             + np.array([0,rotation,0], dtype=float)
         
 
