@@ -15,6 +15,7 @@ import OpenGL.GLU
 # For using SOFA.
 class SOFA():
     def __init__(self, vessel_filename):
+        self.xtip_max = 800
         self.display_size = (640, 480)
         self.vessel_filename = vessel_filename
         self.start_scene()
@@ -219,15 +220,24 @@ class SOFA():
         
     def step(self, realtime=True):
         """Calculate simulator one step.
+        return
+            errclose(bool): If the simulation is closing because of some issue.
         """
-        target_time = time.time() + self.root.dt.value
-        Sofa.Simulation.animate(self.root, self.root.dt.value)
-        Sofa.Simulation.updateVisual(self.root)
-        if realtime:
-            current_time = time.time()
-            if target_time - current_time > 0:
-                time.sleep(target_time - current_time)
-        self.simple_render()
+        # Check 
+        xtip = self.root.InstrumentCombined.m_ircontroller.findData('xtip').value[1]
+        if xtip >= self.xtip_max:
+            errclose = True
+        else:
+            target_time = time.time() + self.root.dt.value
+            Sofa.Simulation.animate(self.root, self.root.dt.value)
+            Sofa.Simulation.updateVisual(self.root)
+            if realtime:
+                current_time = time.time()
+                if target_time - current_time > 0:
+                    time.sleep(target_time - current_time)
+            self.simple_render()
+            errclose = False
+        return errclose
 
     def simple_render(self):
         """Render camera of root onto pygame.

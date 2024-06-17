@@ -65,7 +65,9 @@ class SimManager():
             self.sofa.action(translation=translation, rotation=rotation)
         elif order == 'step':
             realtime = self.orderdict['info'].get('realtime', True)
-            self.sofa.step(realtime=realtime)
+            errclose = self.sofa.step(realtime=realtime)
+            self.response['data'] = {'errclose': errclose}
+            close = errclose
         elif order == 'GetImage':
             image = self.sofa.GetImage()
             filename = self.commu_dir + f'/image_{time.time()}.pkl'

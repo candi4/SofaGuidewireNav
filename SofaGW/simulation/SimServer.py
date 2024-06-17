@@ -116,6 +116,7 @@ class Server():
 class SimController():
     def __init__(self, vessel_filename, timeout=None):
         self.vessel_filename = vessel_filename
+        self.sim_opened = False
         self.server = Server(timeout=timeout)
         self.server.start()
         self.open(vessel_filename=vessel_filename)
@@ -133,13 +134,16 @@ class SimController():
         self.open(vessel_filename=vessel_filename)
     def close(self):
         # Close the client.
-        orderdict = {'order': 'close',
-                    'info': dict()}
-        self.exchange(orderdict)
-        self.server.waitclientclose()
+        if self.sim_opened:
+            orderdict = {'order': 'close',
+                        'info': dict()}
+            self.exchange(orderdict)
+            self.server.waitclientclose()
+            self.sim_opened = False
     def open(self, vessel_filename):
         # Run the client.
         self.server.runclient(vessel_filename=vessel_filename)
+        self.sim_opened = True
     def action(self, translation=0, rotation=0):
         translation = float(translation)
         rotation = float(rotation)
@@ -150,7 +154,10 @@ class SimController():
     def step(self, realtime=False):
         orderdict = {'order': 'step',
                     'info': {'realtime':realtime}}
-        self.exchange(orderdict)
+        response = self.exchange(orderdict)
+        errclose = response['data']['errclose']
+        if errclose: self.sim_opened = False
+        return errclose
     def GetImage(self) -> np.ndarray:
         orderdict = {'order': 'GetImage',
                 'info': dict()}
