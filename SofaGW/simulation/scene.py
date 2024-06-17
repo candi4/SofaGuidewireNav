@@ -186,7 +186,7 @@ class SOFA():
 
         
         # Set camera.
-        source = [-600,0,300]
+        source = [-600,50,300]
         lookAt = source+np.array([1,0,0])
         orientation = [ 0, -0.70710678, 0, 0.70710678]
         self.root.addObject("LightManager")
