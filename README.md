@@ -25,6 +25,19 @@ Follow `1.3.2. using python3` in [SofaPython3 Documentation](https://sofapython3
    - Variable: `SOFA_ROOT`, Value: \<SOFA-install-directory>
    - Variable: `PYTHONPATH`, Value: %SOFA_ROOT%\plugins\SofaPython3\lib\python3\site-packages   
 
+For Ubuntu user:    
+* Add two lines to bashrc file
+   ```
+   gedit ~/.bashrc
+   ```
+   ```
+   export SOFA_ROOT=/path/to/SOFA_install
+   export PYTHONPATH=/path/to/SofaPython3/lib/python3/site-packages:$PYTHONPATH
+   ```
+   ```
+   source ~/.bashrc
+   ```
+
 ### 5. Test SOFA
 After that, you can use `SofaPython3` within your virtual environment.   
 Try the following command at `Anaconda Prompt`.
