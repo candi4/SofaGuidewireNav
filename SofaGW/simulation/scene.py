@@ -312,6 +312,17 @@ class SOFA():
         image = np.flipud(image)
         return image
 
+    def move_camera(self, position=None, lookAt=None, orientation=None):
+        if not(position is None):
+            self.root.camera.findData('position').value = position
+        if not(lookAt is None):
+            self.root.camera.findData('lookAt').value = lookAt
+        else:
+            self.root.camera.findData('lookAt').value = position+np.array([1,0,0])
+        if not(orientation is None):
+            self.root.camera.findData('orientation').value = orientation
+
+
 
 # # Make custom environment with gymnasium
 # # https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/ 
@@ -324,4 +335,21 @@ class SOFA():
 
 
 
-    
+if __name__ == "__main__":
+    sofa = SOFA(r'C:\Users\82105\code_temp\SofaGuidewireNav\vessel\phantom.obj')
+    for i in range(1000):
+        sofa.action(1,0.1)
+        sofa.step(False)
+        # position = sofa.root.InstrumentCombined.VisuGuide.Quads.findData('position').value
+        data = sofa.root.InstrumentCombined.VisuGuide.Quads.findData('position').value
+        # data = sofa.root.InstrumentCombined.VisuGuide.Quads.findData('velocity').value
+        ['bbox', 'componentState', 'constraint', 'derivX', 'dforce(V_DERIV)', 'drawMode', 'externalForce', 'force', 'free_position', 'free_velocity', 'listening', 
+         'mappingJacobian', 'name', 'position', 'printLog', 'reserve', 'reset_position', 'reset_velocity', 'restScale', 'rest_position', 'rotation', 'rotation2', 
+         'scale3d', 'showColor', 'showIndices', 'showIndicesScale', 'showObject', 'showObjectScale', 'showVectors', 'showVectorsScale', 'size', 
+         'solution', 'tags', 'translation', 'translation2', 'useTopology', 'velocity']
+        # print(type(data))
+        # print(data)
+        print(sum(data))
+        # print('len(position)',len(position))
+        # print('position[0]',position[0])
+        sofa.move_camera(position=data[-1] + np.array([-100,0,0])) # tip=-1
