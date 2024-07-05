@@ -322,7 +322,14 @@ class SOFA():
         if not(orientation is None):
             self.root.camera.findData('orientation').value = orientation
 
-
+    def get_GW_position(self) -> list:
+        """GW tip is the last one of the list.
+        """
+        return self.root.InstrumentCombined.VisuGuide.Quads.findData('position').value
+    def get_GW_velocity(self) -> list:
+        """GW tip is the last one of the list.
+        """
+        return self.root.InstrumentCombined.VisuGuide.Quads.findData('velocity').value
 
 # # Make custom environment with gymnasium
 # # https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/ 
