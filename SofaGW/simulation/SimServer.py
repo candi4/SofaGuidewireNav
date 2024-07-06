@@ -12,7 +12,7 @@ import numpy as np
 
 # <SofaGuidewireNav>/SofaGW/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
-from SofaGW.utils import abspath
+from SofaGW.utils import abspath, datasave, dataload, root_dir
 
 
 class Server():
@@ -74,12 +74,6 @@ class Server():
     def dataget(self):
         # Get some data from the client.
         return self.data.clientget()
-    def dataload(self, filename):
-        # Load data from pkl file.
-        with open(filename, 'rb') as f:
-            item = pickle.load(f)
-        os.remove(filename)
-        return item
     
     class SimpleThreadedXMLRPCServer(SimpleXMLRPCServer):
         pass
@@ -117,6 +111,7 @@ class SimController():
     def __init__(self, vessel_filename, timeout=None):
         self.vessel_filename = vessel_filename
         self.sim_opened = False
+        self.commu_dir = root_dir + '/_cache_'
         self.server = Server(timeout=timeout)
         self.server.start()
         self.open(vessel_filename=vessel_filename)
@@ -160,14 +155,77 @@ class SimController():
         return errclose
     def GetImage(self) -> np.ndarray:
         orderdict = {'order': 'GetImage',
-                'info': dict()}
-        filename = self.exchange(orderdict)['data']['filename']
-        image = self.server.dataload(filename=filename)
+                     'info': dict()}
+        response = self.exchange(orderdict)
+        filename = response['data']['filename']
+        image = dataload(filename=filename)
         return image
+    def getData(self, function_name:list):
+        """
+        ------
+        input
+            function_name : get_GW_position, get_GW_velocity
+        """
+        orderdict = {'order': 'getData',
+                     'info': dict()}
+        orderdict['info']['function_name'] = function_name
+        filename = self.exchange(orderdict)['data']['filename']
+        data = dataload(filename=filename)
+        return data
+    
+    def get_GW_position(self) -> np.ndarray:
+        orderdict = {'order': 'get_GW_position',
+                     'info': dict()}
+        response = self.exchange(orderdict)
+        filename = response['data']['filename']
+        GW_position = dataload(filename=filename)
+        return GW_position
+    def get_GW_velocity(self) -> np.ndarray:
+        orderdict = {'order': 'get_GW_velocity',
+                     'info': dict()}
+        response = self.exchange(orderdict)
+        filename = response['data']['filename']
+        GW_velocity = dataload(filename=filename)
+        return GW_velocity
+    def move_camera(self, position=None, lookAt=None, orientation=None):
+        filename = self.commu_dir + f'/image_{time.time()}.pkl'
+        orderdict = {'order': 'move_camera',
+                     'info': {'filename': filename}
+                    }
+        data = {'position':position,
+                'lookAt':lookAt,
+                'orientation':orientation}
+        datasave(item=data, filename=filename)
+        self.exchange(orderdict)
+
         
         
 
 # For test.
 if __name__ == "__main__":
-    pass
     
+    sim = SimController(timeout=10,
+                        vessel_filename=r'C:\Users\82105\code_temp\SofaGuidewireNav\vessel\phantom.obj')
+
+    dt = 0.01
+    errclose = False
+    GW_position = None
+    GW_position_prior = None
+    for i in range(2000):
+        sim.action(translation=1, rotation=0.1)
+        errclose = sim.step(realtime=False)
+        print("errclose",errclose)
+        if errclose:
+            sim.reset()
+        if GW_position is not None:
+            GW_position_prior = GW_position
+        GW_position = sim.get_GW_position()
+        sim.move_camera(position=GW_position[-1] + np.array([-100,0,0]))
+        if GW_position_prior is not None:
+            GW_velocity = sim.get_GW_velocity()
+            GW_velocity_est = (GW_position - GW_position_prior) / dt
+            print('GW_velocity',GW_velocity)
+            print('GW_velocity_est',GW_velocity_est)
+            err = (GW_velocity - GW_velocity_est)/GW_velocity
+            print('err',err)
+    sim.close()

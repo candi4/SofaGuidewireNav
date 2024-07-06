@@ -325,11 +325,13 @@ class SOFA():
     def get_GW_position(self) -> list:
         """GW tip is the last one of the list.
         """
-        return self.root.InstrumentCombined.VisuGuide.Quads.findData('position').value
+        GW_position = self.root.InstrumentCombined.VisuGuide.Quads.findData('position').value
+        return GW_position
     def get_GW_velocity(self) -> list:
         """GW tip is the last one of the list.
         """
-        return self.root.InstrumentCombined.VisuGuide.Quads.findData('velocity').value
+        GW_velocity = self.root.InstrumentCombined.VisuGuide.Quads.findData('velocity').value
+        return GW_velocity
 
 # # Make custom environment with gymnasium
 # # https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/ 
@@ -347,16 +349,4 @@ if __name__ == "__main__":
     for i in range(1000):
         sofa.action(1,0.1)
         sofa.step(False)
-        # position = sofa.root.InstrumentCombined.VisuGuide.Quads.findData('position').value
-        data = sofa.root.InstrumentCombined.VisuGuide.Quads.findData('position').value
-        # data = sofa.root.InstrumentCombined.VisuGuide.Quads.findData('velocity').value
-        ['bbox', 'componentState', 'constraint', 'derivX', 'dforce(V_DERIV)', 'drawMode', 'externalForce', 'force', 'free_position', 'free_velocity', 'listening', 
-         'mappingJacobian', 'name', 'position', 'printLog', 'reserve', 'reset_position', 'reset_velocity', 'restScale', 'rest_position', 'rotation', 'rotation2', 
-         'scale3d', 'showColor', 'showIndices', 'showIndicesScale', 'showObject', 'showObjectScale', 'showVectors', 'showVectorsScale', 'size', 
-         'solution', 'tags', 'translation', 'translation2', 'useTopology', 'velocity']
-        # print(type(data))
-        # print(data)
-        print(sum(data))
-        # print('len(position)',len(position))
-        # print('position[0]',position[0])
-        sofa.move_camera(position=data[-1] + np.array([-100,0,0])) # tip=-1
+        sofa.move_camera(position=sofa.get_GW_position()[-100] + np.array([-100,0,0])) # tip=-1
