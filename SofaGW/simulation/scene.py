@@ -322,13 +322,13 @@ class SOFA():
         if not(orientation is None):
             self.root.camera.findData('orientation').value = orientation
 
-    def get_GW_position(self) -> list:
-        """GW tip is the last one of the list.
+    def get_GW_position(self) -> np.ndarray:
+        """GW tip is the last row of the array.
         """
         GW_position = self.root.InstrumentCombined.VisuGuide.Quads.findData('position').value
         return GW_position
-    def get_GW_velocity(self) -> list:
-        """GW tip is the last one of the list.
+    def get_GW_velocity(self) -> np.ndarray:
+        """GW tip is the last row of the array.
         """
         GW_velocity = self.root.InstrumentCombined.VisuGuide.Quads.findData('velocity').value
         return GW_velocity
@@ -349,4 +349,11 @@ if __name__ == "__main__":
     for i in range(1000):
         sofa.action(1,0.1)
         sofa.step(False)
-        sofa.move_camera(position=sofa.get_GW_position()[-100] + np.array([-100,0,0])) # tip=-1
+        GW_position = sofa.get_GW_position()
+        print("type(GW_position)",type(GW_position))
+        GW_tip_coordinate = GW_position[-100:]
+        GW_tip_coordinate
+        sofa.move_camera(position=GW_position[-100] + np.array([-100,0,0])) # tip=-1
+        
+    # data = sofa.root.Vessels.componentState
+    # print("dir(data)",dir(data))
