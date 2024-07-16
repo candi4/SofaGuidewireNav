@@ -159,7 +159,7 @@ class SOFA():
         VisuCoils.addObject('Edge2QuadTopologicalMapping', nbPointsOnEachCircle=10, radius=0.3, input='@../../topoLines_coils/meshLinesCoils', output='@ContainerCoils', flipNormals=True, listening=True)
         VisuCoils.addObject('AdaptiveBeamMapping', name='visuMapCoils', useCurvAbs=True, printLog=False, interpolation='@../InterpolCoils', input='@../DOFs', output='@Quads', isMechanical=False)
         VisuCoilsOgl = VisuCoils.addChild('VisuOgl')
-        VisuCoilsOgl.addObject('OglModel', name='Visual', color=[0.9, 0.9, 0.9, 0.9], material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20', quads='@../ContainerCoils.quads')
+        VisuCoilsOgl.addObject('OglModel', name='Visual', color=[0, 1, 0, 0.9], material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20', quads='@../ContainerCoils.quads')
         VisuCoilsOgl.addObject('IdentityMapping', input='@../Quads', output='@Visual')
         
 
