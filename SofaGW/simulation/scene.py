@@ -137,7 +137,7 @@ class SOFA():
         VisuCatheter.addObject('Edge2QuadTopologicalMapping', nbPointsOnEachCircle=10, radius=2, input='@../../topoLines_cath/meshLinesCath', output='@ContainerCath', flipNormals=True)
         VisuCatheter.addObject('AdaptiveBeamMapping', name='VisuMapCath', useCurvAbs=True, printLog=False, interpolation='@../InterpolCatheter', input='@../DOFs', output='@Quads', isMechanical=False)
         VisuCatheterOgl = VisuCatheter.addChild('VisuOgl', activated=True)
-        VisuCatheterOgl.addObject('OglModel', name='Visual', color=[0.7, 0.7, 0.7, 0.9], quads='@../ContainerCath.quads', material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20')
+        VisuCatheterOgl.addObject('OglModel', name='Visual', color=[0, 0.3, 0, 0.9], quads='@../ContainerCath.quads', material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20')
         VisuCatheterOgl.addObject('IdentityMapping', input='@../Quads', output='@Visual')
         ## Visualize guidewire
         VisuGuide = InstrumentCombined.addChild('VisuGuide', activated=True)
@@ -148,7 +148,7 @@ class SOFA():
         VisuGuide.addObject('Edge2QuadTopologicalMapping', nbPointsOnEachCircle=10, radius=1, input='@../../topoLines_guide/meshLinesGuide', output='@ContainerGuide', flipNormals=True, listening=True)
         VisuGuide.addObject('AdaptiveBeamMapping', name='visuMapGuide', useCurvAbs=True, printLog=False, interpolation='@../InterpolGuide', input='@../DOFs', output='@Quads', isMechanical=False)
         VisuGuideOgl = VisuGuide.addChild('VisuOgl')
-        VisuGuideOgl.addObject('OglModel', name='Visual', color=[0.2, 0.2, 0.8, 0.9], material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20', quads='@../ContainerGuide.quads')
+        VisuGuideOgl.addObject('OglModel', name='Visual', color=[0, 0, 0.8, 0.9], material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20', quads='@../ContainerGuide.quads')
         VisuGuideOgl.addObject('IdentityMapping', input='@../Quads', output='@Visual')
         ## Visualize coils
         VisuCoils = InstrumentCombined.addChild('VisuCoils', activated=True)
@@ -159,7 +159,7 @@ class SOFA():
         VisuCoils.addObject('Edge2QuadTopologicalMapping', nbPointsOnEachCircle=10, radius=0.3, input='@../../topoLines_coils/meshLinesCoils', output='@ContainerCoils', flipNormals=True, listening=True)
         VisuCoils.addObject('AdaptiveBeamMapping', name='visuMapCoils', useCurvAbs=True, printLog=False, interpolation='@../InterpolCoils', input='@../DOFs', output='@Quads', isMechanical=False)
         VisuCoilsOgl = VisuCoils.addChild('VisuOgl')
-        VisuCoilsOgl.addObject('OglModel', name='Visual', color=[0.2, 0.8, 0.2, 0.9], material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20', quads='@../ContainerCoils.quads')
+        VisuCoilsOgl.addObject('OglModel', name='Visual', color=[0, 0.3, 0, 0.9], material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20', quads='@../ContainerCoils.quads')
         VisuCoilsOgl.addObject('IdentityMapping', input='@../Quads', output='@Visual')
         
 
