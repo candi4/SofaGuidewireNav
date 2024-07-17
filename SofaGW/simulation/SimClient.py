@@ -7,7 +7,7 @@ import platform
 
 # <SofaGuidewireNav>/SofaGW/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
-from SofaGW.utils import mkdir, root_dir, clear_folder
+from SofaGW.utils import mkdir, root_dir, clear_folder, datasave, dataload
 from SofaGW.simulation.scene import SOFA
 
 class Client():
@@ -27,10 +27,6 @@ class Client():
     def dataget(self):
         # Get data from the server.
         return self.server.serverget()
-    def datasave(self, item, filename):
-        mkdir(filename=filename)
-        with open(filename, 'wb') as f:
-            pickle.dump(item, f)
 
 class SimManager():
     def __init__(self, port_rpc, vessel_filename):
@@ -56,6 +52,8 @@ class SimManager():
     def execute(self):
         # Do proper process for order
         order = self.orderdict.get('order', None)
+        filename = self.commu_dir + f'/image_{time.time()}.pkl'
+        self.response['data'] = {'filename': filename}
         close = False
         if order == 'close':
             close = True
@@ -70,9 +68,27 @@ class SimManager():
             close = errclose
         elif order == 'GetImage':
             image = self.sofa.GetImage()
-            filename = self.commu_dir + f'/image_{time.time()}.pkl'
-            self.client.datasave(item=image, filename=filename)
-            self.response['data'] = {'filename': filename}
+            datasave(item=image, filename=filename)
+
+        elif order == 'get_GW_position':
+            GW_position = self.sofa.get_GW_position()
+            datasave(item=GW_position, filename=filename)
+        elif order == 'get_GW_velocity':
+            GW_velocity = self.sofa.get_GW_velocity()
+            datasave(item=GW_velocity, filename=filename)
+        
+        elif order == 'move_camera':
+            filename = self.orderdict['info']['filename']
+            data = dataload(filename=filename)
+            position = data.get('position', None)
+            lookAt = data.get('lookAt', None)
+            orientation = data.get('orientation', None)
+            self.sofa.move_camera(position=position,
+                                  lookAt=lookAt,
+                                  orientation=orientation,
+                                  )
+            
+
         else:
             raise Exception(f"Improper order. self.orderdict = {self.orderdict}")
         return close

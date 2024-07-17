@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import PIL.Image
+import pickle
 
 # >>> Related file/folder/directory >>>
 
@@ -61,6 +62,18 @@ def abspath(filename):
     The root of relative directory is workspace, where *.py file is run.
     """
     return os.path.abspath(filename)
+
+
+def datasave(item, filename):
+    mkdir(filename=filename)
+    with open(filename, 'wb') as f:
+        pickle.dump(item, f)
+def dataload(filename):
+    # Load data from pkl file.
+    with open(filename, 'rb') as f:
+        item = pickle.load(f)
+    os.remove(filename)
+    return item
 
 # <<< Related file/folder/directory <<<
 

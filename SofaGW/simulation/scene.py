@@ -137,7 +137,7 @@ class SOFA():
         VisuCatheter.addObject('Edge2QuadTopologicalMapping', nbPointsOnEachCircle=10, radius=2, input='@../../topoLines_cath/meshLinesCath', output='@ContainerCath', flipNormals=True)
         VisuCatheter.addObject('AdaptiveBeamMapping', name='VisuMapCath', useCurvAbs=True, printLog=False, interpolation='@../InterpolCatheter', input='@../DOFs', output='@Quads', isMechanical=False)
         VisuCatheterOgl = VisuCatheter.addChild('VisuOgl', activated=True)
-        VisuCatheterOgl.addObject('OglModel', name='Visual', color=[0, 0.3, 0, 0.9], quads='@../ContainerCath.quads', material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20')
+        VisuCatheterOgl.addObject('OglModel', name='Visual', color=[0, 1, 0, 0.9], quads='@../ContainerCath.quads', material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20')
         VisuCatheterOgl.addObject('IdentityMapping', input='@../Quads', output='@Visual')
         ## Visualize guidewire
         VisuGuide = InstrumentCombined.addChild('VisuGuide', activated=True)
@@ -148,7 +148,7 @@ class SOFA():
         VisuGuide.addObject('Edge2QuadTopologicalMapping', nbPointsOnEachCircle=10, radius=1, input='@../../topoLines_guide/meshLinesGuide', output='@ContainerGuide', flipNormals=True, listening=True)
         VisuGuide.addObject('AdaptiveBeamMapping', name='visuMapGuide', useCurvAbs=True, printLog=False, interpolation='@../InterpolGuide', input='@../DOFs', output='@Quads', isMechanical=False)
         VisuGuideOgl = VisuGuide.addChild('VisuOgl')
-        VisuGuideOgl.addObject('OglModel', name='Visual', color=[0, 0, 0.8, 0.9], material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20', quads='@../ContainerGuide.quads')
+        VisuGuideOgl.addObject('OglModel', name='Visual', color=[0, 0, 1, 0.9], material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20', quads='@../ContainerGuide.quads')
         VisuGuideOgl.addObject('IdentityMapping', input='@../Quads', output='@Visual')
         ## Visualize coils
         VisuCoils = InstrumentCombined.addChild('VisuCoils', activated=True)
@@ -159,7 +159,7 @@ class SOFA():
         VisuCoils.addObject('Edge2QuadTopologicalMapping', nbPointsOnEachCircle=10, radius=0.3, input='@../../topoLines_coils/meshLinesCoils', output='@ContainerCoils', flipNormals=True, listening=True)
         VisuCoils.addObject('AdaptiveBeamMapping', name='visuMapCoils', useCurvAbs=True, printLog=False, interpolation='@../InterpolCoils', input='@../DOFs', output='@Quads', isMechanical=False)
         VisuCoilsOgl = VisuCoils.addChild('VisuOgl')
-        VisuCoilsOgl.addObject('OglModel', name='Visual', color=[0, 0.3, 0, 0.9], material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20', quads='@../ContainerCoils.quads')
+        VisuCoilsOgl.addObject('OglModel', name='Visual', color=[0, 1, 0, 0.9], material='texture Ambient 1 0.2 0.2 0.2 0.0 Diffuse 1 1.0 1.0 1.0 1.0 Specular 1 1.0 1.0 1.0 1.0 Emissive 0 0.15 0.05 0.05 0.0 Shininess 1 20', quads='@../ContainerCoils.quads')
         VisuCoilsOgl.addObject('IdentityMapping', input='@../Quads', output='@Visual')
         
 
@@ -261,7 +261,7 @@ class SOFA():
 
 
     def action(self, translation=0, rotation=0):
-        xtip = self.root.InstrumentCombined.m_ircontroller.findData('xtip').value
+        xtip = self.root.InstrumentCombined.m_ircontroller.findData('xtip').value.copy()
         xtip = xtip + np.array([0,translation,0], dtype=float)
         xtip[xtip<0] = 0
         self.root.InstrumentCombined.m_ircontroller.findData('xtip').value = xtip
@@ -312,6 +312,26 @@ class SOFA():
         image = np.flipud(image)
         return image
 
+    def move_camera(self, position=None, lookAt=None, orientation=None):
+        if not(position is None):
+            self.root.camera.findData('position').value = position
+        if not(lookAt is None):
+            self.root.camera.findData('lookAt').value = lookAt
+        else:
+            self.root.camera.findData('lookAt').value = position+np.array([1,0,0])
+        if not(orientation is None):
+            self.root.camera.findData('orientation').value = orientation
+
+    def get_GW_position(self) -> np.ndarray:
+        """GW tip is the last row of the array.
+        """
+        GW_position = self.root.InstrumentCombined.VisuGuide.Quads.findData('position').value
+        return GW_position
+    def get_GW_velocity(self) -> np.ndarray:
+        """GW tip is the last row of the array.
+        """
+        GW_velocity = self.root.InstrumentCombined.VisuGuide.Quads.findData('velocity').value
+        return GW_velocity
 
 # # Make custom environment with gymnasium
 # # https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/ 
@@ -324,4 +344,16 @@ class SOFA():
 
 
 
-    
+if __name__ == "__main__":
+    sofa = SOFA(r'C:\Users\82105\code_temp\SofaGuidewireNav\vessel\phantom.obj')
+    for i in range(1000):
+        sofa.action(1,0.1)
+        sofa.step(False)
+        GW_position = sofa.get_GW_position()
+        print("type(GW_position)",type(GW_position))
+        GW_tip_coordinate = GW_position[-100:]
+        GW_tip_coordinate
+        sofa.move_camera(position=GW_position[-100] + np.array([-100,0,0])) # tip=-1
+        
+    # data = sofa.root.Vessels.componentState
+    # print("dir(data)",dir(data))
