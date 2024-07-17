@@ -17,10 +17,11 @@ from SofaGW.utils import abspath, datasave, dataload, root_dir, delete_old_files
 
 
 class Server():
-    def __init__(self, timeout:Optional[int]=None):
+    def __init__(self, commu_dir, timeout:Optional[int]=None):
         self.port_rpc = None
         self.clientfile = os.path.dirname(os.path.abspath(__file__)) + '/SimClient.py'
         self.timeout = timeout
+        self.commu_dir = commu_dir
     def start(self):
         self.setport()
         self.data = Server.Data(timeout=self.timeout)
@@ -95,11 +96,11 @@ class Server():
         server_thread.start()
     def runclient(self, vessel_filename):
         # Run the client
-        def deferredStart(path, port_rpc, vessel_filename):
+        def deferredStart(path, port_rpc, vessel_filename, commu_dir):
             vessel_filename = abspath(vessel_filename)
-            subprocess.run([sys.executable, path, str(port_rpc), vessel_filename],
+            subprocess.run([sys.executable, path, str(port_rpc), vessel_filename, commu_dir],
                             check=True)
-        self.first_worker_thread = threading.Thread(target=deferredStart, args=(self.clientfile, self.port_rpc, vessel_filename))
+        self.first_worker_thread = threading.Thread(target=deferredStart, args=(self.clientfile, self.port_rpc, vessel_filename, self.commu_dir))
         self.first_worker_thread.daemon = True
         self.first_worker_thread.start()
         time.sleep(1)
@@ -113,7 +114,8 @@ class SimController():
         self.vessel_filename = vessel_filename
         self.sim_opened = False
         self.commu_dir = root_dir + '/_cache_'
-        self.server = Server(timeout=timeout)
+        self.timeout = timeout
+        self.server = Server(commu_dir=self.commu_dir,timeout=self.timeout)
         self.server.start()
         self.open(vessel_filename=vessel_filename)
     def exchange(self, item):
@@ -139,7 +141,7 @@ class SimController():
     def open(self, vessel_filename):
         """Run the client.
         """
-        delete_old_files(directory=self.commu_dir, seconds_old=self.server.timeout)
+        delete_old_files(directory=self.commu_dir, seconds_old=self.timeout)
         self.server.runclient(vessel_filename=vessel_filename)
         self.sim_opened = True
     def action(self, translation=0, rotation=0):
