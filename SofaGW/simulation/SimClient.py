@@ -39,7 +39,6 @@ class SimManager():
         self.response = None
         # prepare directory used for communication
         self.commu_dir = root_dir + '/_cache_'
-        clear_folder(directory=self.commu_dir)
         # sofa
         self.sofa = SOFA(vessel_filename=vessel_filename)
     def getorder(self):
@@ -50,9 +49,10 @@ class SimManager():
         self.orderdict = self.client.dataget()
         self.response = {'data': dict(),}
     def execute(self):
-        # Do proper process for order
+        """Do proper process for order
+        """
         order = self.orderdict.get('order', None)
-        filename = self.commu_dir + f'/image_{time.time()}.pkl'
+        filename = self.commu_dir + f'/{self.port_rpc}_{str(time.time())[7:]}.pkl'
         self.response['data'] = {'filename': filename}
         close = False
         if order == 'close':

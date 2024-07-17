@@ -9,14 +9,15 @@ import queue
 import time
 import pickle
 import numpy as np
+from typing import Optional
 
 # <SofaGuidewireNav>/SofaGW/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
-from SofaGW.utils import abspath, datasave, dataload, root_dir
+from SofaGW.utils import abspath, datasave, dataload, root_dir, delete_old_files
 
 
 class Server():
-    def __init__(self, timeout=None):
+    def __init__(self, timeout:Optional[int]=None):
         self.port_rpc = None
         self.clientfile = os.path.dirname(os.path.abspath(__file__)) + '/SimClient.py'
         self.timeout = timeout
@@ -136,7 +137,9 @@ class SimController():
             self.server.waitclientclose()
             self.sim_opened = False
     def open(self, vessel_filename):
-        # Run the client.
+        """Run the client.
+        """
+        delete_old_files(directory=self.commu_dir, seconds_old=self.server.timeout)
         self.server.runclient(vessel_filename=vessel_filename)
         self.sim_opened = True
     def action(self, translation=0, rotation=0):
@@ -188,7 +191,7 @@ class SimController():
         GW_velocity = dataload(filename=filename)
         return GW_velocity
     def move_camera(self, position=None, lookAt=None, orientation=None):
-        filename = self.commu_dir + f'/image_{time.time()}.pkl'
+        filename = self.commu_dir + f'/{self.server.port_rpc}_{str(time.time())[7:]}.pkl'
         orderdict = {'order': 'move_camera',
                      'info': {'filename': filename}
                     }
@@ -203,29 +206,67 @@ class SimController():
 
 # For test.
 if __name__ == "__main__":
-    
+    import cv2
+
     sim = SimController(timeout=10,
                         vessel_filename=r'C:\Users\82105\code_temp\SofaGuidewireNav\vessel\phantom.obj')
 
-    dt = 0.01
-    errclose = False
-    GW_position = None
-    GW_position_prior = None
+    sim2 = SimController(timeout=10,
+                        vessel_filename=r'C:\Users\82105\code_temp\SofaGuidewireNav\vessel\phantom.obj')
+    
+    for i in range(30):
+        sim.action(translation=1, rotation=0.1)
+        errclose = sim.step(realtime=False)
+        print("errclose",errclose)
+        if errclose:
+            sim.reset()
+    
     for i in range(2000):
         sim.action(translation=1, rotation=0.1)
         errclose = sim.step(realtime=False)
         print("errclose",errclose)
         if errclose:
             sim.reset()
-        if GW_position is not None:
-            GW_position_prior = GW_position
         GW_position = sim.get_GW_position()
         sim.move_camera(position=GW_position[-1] + np.array([-100,0,0]))
-        if GW_position_prior is not None:
-            GW_velocity = sim.get_GW_velocity()
-            GW_velocity_est = (GW_position - GW_position_prior) / dt
-            print('GW_velocity',GW_velocity)
-            print('GW_velocity_est',GW_velocity_est)
-            err = (GW_velocity - GW_velocity_est)/GW_velocity
-            print('err',err)
+        image = sim.GetImage()
+        cv2.imshow(winname=f'port={sim.server.port_rpc}',mat=image)
+        cv2.waitKey(1)
+        
+        sim2.action(translation=1, rotation=0.1)
+        errclose = sim2.step(realtime=False)
+        print("errclose",errclose)
+        if errclose:
+            sim2.reset()
+        GW_position = sim2.get_GW_position()
+        sim2.move_camera(position=GW_position[-1] + np.array([-100,0,0]))
+        image = sim2.GetImage()
+        cv2.imshow(winname=f'port={sim2.server.port_rpc}',mat=image)
+        cv2.waitKey(1)
+    
+    # dt = 0.01
+    # errclose = False
+    # GW_position = None
+    # GW_position_prior = None
+    # for i in range(2000):
+    #     sim.action(translation=1, rotation=0.1)
+    #     errclose = sim.step(realtime=False)
+    #     print("errclose",errclose)
+    #     if errclose:
+    #         sim.reset()
+    #     if GW_position is not None:
+    #         GW_position_prior = GW_position
+    #     GW_position = sim.get_GW_position()
+    #     sim.move_camera(position=GW_position[-1] + np.array([-100,0,0]))
+    #     if GW_position_prior is not None:
+    #         GW_velocity = sim.get_GW_velocity()
+    #         GW_velocity_est = (GW_position - GW_position_prior) / dt
+    #         print('GW_velocity',GW_velocity)
+    #         print('GW_velocity_est',GW_velocity_est)
+    #         err = (GW_velocity - GW_velocity_est)/GW_velocity
+    #         print('err',err)
+    #     image = sim.GetImage()
+    #     cv2.imshow(winname=f'port={sim.server.port_rpc}',mat=image)
+    #     cv2.waitKey(1)
     sim.close()
+    sim2.close()
