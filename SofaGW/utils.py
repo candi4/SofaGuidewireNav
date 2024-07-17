@@ -36,7 +36,7 @@ def clear_folder(directory):
         os.remove(file)
         print("Deleted " + str(file))
 
-def delete_old_files(directory, seconds_old:Optional[int]=None):
+def delete_old_files(directory, seconds_old:Optional[int]=3600):
     """
     input param
         directory : (str) directory to clear. e.g. dir1/dir2 not dir1/dir2/

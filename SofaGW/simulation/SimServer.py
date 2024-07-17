@@ -141,7 +141,7 @@ class SimController():
     def open(self, vessel_filename):
         """Run the client.
         """
-        delete_old_files(directory=self.commu_dir, seconds_old=self.timeout)
+        delete_old_files(directory=self.commu_dir, seconds_old=self.timeout+1)
         self.server.runclient(vessel_filename=vessel_filename)
         self.sim_opened = True
     def action(self, translation=0, rotation=0):
