@@ -11,6 +11,13 @@ import PIL.Image
 import OpenGL.GL
 import OpenGL.GLU
 
+# from OpenGL.GL import *
+# from OpenGL.GLU import *
+
+
+# from pyglet.gl import *
+# import pyglet
+
 
 # For using SOFA.
 class SOFA():
@@ -269,26 +276,6 @@ class SOFA():
             = self.root.InstrumentCombined.m_ircontroller.findData('rotationInstrument').value \
             + np.array([0,rotation,0], dtype=float)
         
-
-    def visualize(self):
-        """Render camera of root onto pygame.
-        Get the OpenGL Context to render an image (snapshot) of the simulation state.
-        """
-        zNear = 0.1; zFar = 0 # For penetrate infinite view.
-        OpenGL.GL.glClear(OpenGL.GL.GL_COLOR_BUFFER_BIT | OpenGL.GL.GL_DEPTH_BUFFER_BIT)
-        OpenGL.GL.glEnable(OpenGL.GL.GL_LIGHTING)
-        OpenGL.GL.glEnable(OpenGL.GL.GL_DEPTH_TEST)
-        OpenGL.GL.glMatrixMode(OpenGL.GL.GL_PROJECTION)
-        OpenGL.GL.glLoadIdentity()
-        OpenGL.GLU.gluPerspective(45, (self.display_size[0] / self.display_size[1]), zNear, zFar)
-        OpenGL.GL.glMatrixMode(OpenGL.GL.GL_MODELVIEW)
-        OpenGL.GL.glLoadIdentity()
-
-        cameraMVM = self.root.camera.getOpenGLModelViewMatrix()
-        OpenGL.GL.glMultMatrixd(cameraMVM)
-        Sofa.SofaGL.draw(self.root)
-
-        pygame.display.flip()
         
     def GetImage(self):
         """
@@ -345,14 +332,25 @@ class SOFA():
 
 
 if __name__ == "__main__":
+    import cv2
+    import sys, os
+    # <SofaGW>/simulation/../
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../")
+    from utils import SaveImage
     sofa = SOFA(r'C:\Users\82105\code_temp\SofaGuidewireNav\vessel\phantom.obj')
     for i in range(1000):
         sofa.action(1,0.1)
         sofa.step(False)
+        image = sofa.GetImage()
+        try:
+            cv2.imshow(winname='camera',mat=image)
+            cv2.waitKey(1)
+        except cv2.error:
+            pass
+        SaveImage(image=image,filename='camera.jpg')
         GW_position = sofa.get_GW_position()
-        print("type(GW_position)",type(GW_position))
+        # print("type(GW_position)",type(GW_position))
         GW_tip_coordinate = GW_position[-100:]
-        GW_tip_coordinate
         sofa.move_camera(position=GW_position[-100] + np.array([-100,0,0])) # tip=-1
         
     # data = sofa.root.Vessels.componentState

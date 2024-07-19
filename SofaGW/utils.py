@@ -2,6 +2,9 @@ import os
 import numpy as np
 import PIL.Image
 import pickle
+import glob
+import time
+from typing import Optional
 
 # >>> Related file/folder/directory >>>
 
@@ -28,13 +31,30 @@ def clear_folder(directory):
     input param
         directory : (str) directory to clear. e.g. dir1/dir2 not dir1/dir2/
     """
-    directory
-    import os, glob
-
     # Loop over all files and delete them one by one
     for file in glob.glob(directory+"/*"):
         os.remove(file)
         print("Deleted " + str(file))
+
+def delete_old_files(directory, seconds_old:Optional[int]=3600):
+    """
+    input param
+        directory : (str) directory to clear. e.g. dir1/dir2 not dir1/dir2/
+    """
+    if seconds_old is None:
+        seconds_old = 3600
+    now = time.time()
+    cutoff = now - seconds_old
+
+    for filename in os.listdir(directory+'/'):
+        filepath = os.path.join(directory, filename)
+        if os.path.isfile(filepath):
+            file_creation_time = os.path.getctime(filepath)
+            if file_creation_time < cutoff:
+                os.remove(filepath)
+                print(f"Deleted {filename}")
+
+
 
 def upper_directory(filename, step=0) -> str:
     """ex. when step=0,
