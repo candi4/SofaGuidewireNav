@@ -13,7 +13,7 @@ from typing import Optional
 
 # <SofaGuidewireNav>/SofaGW/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
-from SofaGW.utils import abspath, datasave, dataload, root_dir, delete_old_files
+from SofaGW.utils import abspath, datasave, dataload, root_dir, delete_old_files, mkdir
 
 
 class Server():
@@ -141,6 +141,8 @@ class SimController():
     def open(self, vessel_filename):
         """Run the client.
         """
+        mkdir(directory=self.commu_dir)
+        print(self.commu_dir)
         delete_old_files(directory=self.commu_dir, seconds_old=self.timeout+1)
         self.server.runclient(vessel_filename=vessel_filename)
         self.sim_opened = True
