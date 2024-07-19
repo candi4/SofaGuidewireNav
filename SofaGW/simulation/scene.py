@@ -16,7 +16,7 @@ import OpenGL.GLU
 
 
 # from pyglet.gl import *
-import pyglet
+# import pyglet
 
 
 # For using SOFA.
