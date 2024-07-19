@@ -342,8 +342,11 @@ if __name__ == "__main__":
         sofa.action(1,0.1)
         sofa.step(False)
         image = sofa.GetImage()
-        cv2.imshow(winname='camera',mat=image)
-        cv2.waitKey(1)
+        try:
+            cv2.imshow(winname='camera',mat=image)
+            cv2.waitKey(1)
+        except cv2.error:
+            pass
         SaveImage(image=image,filename='camera.jpg')
         GW_position = sofa.get_GW_position()
         # print("type(GW_position)",type(GW_position))

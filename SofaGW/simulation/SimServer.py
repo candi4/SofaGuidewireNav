@@ -232,9 +232,12 @@ if __name__ == "__main__":
         GW_position = sim.get_GW_position()
         sim.move_camera(position=GW_position[-1] + np.array([-100,0,0]))
         image = sim.GetImage()
-        cv2.imshow(winname=f'port={sim.server.port_rpc}',mat=image)
-        cv2.waitKey(1)
-        
+        try:
+            cv2.imshow(winname=f'port={sim.server.port_rpc}',mat=image)
+            cv2.waitKey(1)
+        except cv2.error:
+            pass
+
         sim2.action(translation=1, rotation=0.1)
         errclose = sim2.step(realtime=False)
         print("errclose",errclose)
@@ -243,8 +246,11 @@ if __name__ == "__main__":
         GW_position = sim2.get_GW_position()
         sim2.move_camera(position=GW_position[-1] + np.array([-100,0,0]))
         image = sim2.GetImage()
-        cv2.imshow(winname=f'port={sim2.server.port_rpc}',mat=image)
-        cv2.waitKey(1)
+        try:
+            cv2.imshow(winname=f'port={sim2.server.port_rpc}',mat=image)
+            cv2.waitKey(1)
+        except cv2.error:
+            pass
     
     # dt = 0.01
     # errclose = False
