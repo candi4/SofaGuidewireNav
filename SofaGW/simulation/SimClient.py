@@ -7,7 +7,7 @@ import platform
 
 # <SofaGuidewireNav>/SofaGW/simulation/../../
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))+"/../../")
-from SofaGW.utils import mkdir, root_dir, clear_folder, datasave, dataload
+from SofaGW.utils import datasave, dataload
 from SofaGW.simulation.scene import SOFA
 
 class Client():

@@ -8,10 +8,12 @@ from typing import Optional
 
 # >>> Related file/folder/directory >>>
 
-def mkdir(filename: str):
-    """make directory 
+def mkdir(filename: Optional[str]= None, directory: Optional[str] = None):
+    """make directory.
     filename can include a file e.g. dir/file.py.
     """
+    if filename is None:
+        filename = directory + '/'
     if '/' in filename or '\\' in filename:
         idx_slash = filename[::-1].find('/')
         idx_islash = filename[::-1].find('\\')
