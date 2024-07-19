@@ -74,7 +74,12 @@ Navigate to the SofaGuidewireNav directory, activate your virtual environment, a
 ```
 pip install -r requirements.txt
 ```
-Then, the python modules listed in `requirements.txt` will be installed in your virtual environment.
+Then, the python modules listed in `requirements.txt` will be installed in your virtual environment.    
+* If using Ubuntu server, install headless version opencv.
+   ```
+   pip uninstall opencv-python
+   pip install opencv-python-headless
+   ```
 
 ### 8. Recommended installations
 Other things to install for convenience   
