@@ -199,6 +199,11 @@ class SOFA():
         orientation = [ 0, -0.70710678, 0, 0.70710678]
         self.root.addObject("LightManager")
         self.root.addObject("DirectionalLight", direction=[-1,0,0])
+        self.root.addObject("DirectionalLight", direction=[ 1,0,0])
+        self.root.addObject("DirectionalLight", direction=[0,-1,0])
+        self.root.addObject("DirectionalLight", direction=[0, 1,0])
+        self.root.addObject("DirectionalLight", direction=[0,0,-1])
+        self.root.addObject("DirectionalLight", direction=[0,0, 1])
         self.root.addObject('InteractiveCamera', name='camera', position=source,
                         lookAt=lookAt, orientation=orientation)
         # self.root.camera.findData('position').value = []
