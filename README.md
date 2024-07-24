@@ -156,3 +156,6 @@ Other things to install for convenience
 ## Task
 **Task:** Create an RL model that controls the guidewire to target a specific exit.   
 You can use python modules for RL, such as [Stable-Baselines3](https://stable-baselines3.readthedocs.io/en/master/).
+
+## TODO
+* Revise this repository to be installed by `pip install git+https://`
