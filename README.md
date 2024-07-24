@@ -77,7 +77,7 @@ pip install -r requirements.txt
 Then, the python modules listed in `requirements.txt` will be installed in your virtual environment.    
 * If using Ubuntu server, install headless version opencv.
    ```
-   pip uninstall opencv-python
+   pip uninstall opencv-python -y
    pip install opencv-python-headless
    ```
 
