@@ -1,7 +1,7 @@
 from SofaGW import SimController
 from SofaGW.utils import SaveImage, root_dir
 
-def test():
+def test_installation():
     sim = SimController(timeout=10,
                         vessel_filename=root_dir+'/vessel/phantom.obj')
 
