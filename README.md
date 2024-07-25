@@ -4,16 +4,13 @@ Use [SOFA framework](https://github.com/sofa-framework/sofa) for guidewire navig
 
 ## Preparation
 ### 1. Install Anaconda
-[Download](https://www.anaconda.com/download/success) and [install](https://docs.anaconda.com/free/anaconda/install/windows/) anaconda. I recommend referring to google.   
-From now on, when using python or anaconda (conda), use `Anaconda Prompt`.
+[Download](https://www.anaconda.com/download/success) and [install](https://docs.anaconda.com/free/anaconda/install/windows/) anaconda.    
 ### 2. Make virtual environment
-Make virtual environment using anaconda with python version 3.8.
+Make virtual environment using anaconda with python version 3.8 and activate it.
 ```
 conda create -n sofarl python=3.8
 conda activate sofarl
 ```
-The First line creates the virtual environment. The second line activates the virtual environment.   
-From now on, when using python, activate the virtual environment `sofarl` and type `python <file-name>`.
 
 ### 3. Install SOFA framework
 Download [SOFA_v23.06.00_Win64.zip](https://github.com/sofa-framework/sofa/releases/tag/v23.06.00).   
@@ -58,104 +55,43 @@ Found SofaPython3.dll in C:\Users\user\SOFA_v23.06.00_Win64\plugins\SofaPython3\
 ```
 If the output appears as shown above, you can use SOFA via python.
 
-### 6. Clone this repository
-Navigate to preferred directory and clone this repository.
-```
-git clone https://github.com/candi4/SofaGuidewireNav.git
-```
-Or download and unzip the repository.   
-   1. Navigate to the [main page of the repository](https://github.com/candi4/SofaGuidewireNav). 
-   2. Above the list of files, click `<> Code`. 
-   3. Click `Download ZIP`. 
-   4. Move the zip file to preferred directory and unzip. 
 
-### 7. Install requirements
-Navigate to the SofaGuidewireNav directory, activate your virtual environment, and enter the following command.
+## Installation
+Install this repo as a Python package.
 ```
-pip install -r requirements.txt
+pip install git+https://github.com/candi4/SofaGuidewireNav.git
 ```
-Then, the python modules listed in `requirements.txt` will be installed in your virtual environment.    
 * If using Ubuntu server, install headless version opencv.
    ```
    pip uninstall opencv-python -y
    pip install opencv-python-headless
    ```
-
-### 8. Recommended installations
-Other things to install for convenience   
-- [Visual Studio Code (vscode)](https://code.visualstudio.com/): Convinent tool for editing codes. Additionally, install the `Python` extension in vscode for a python programming interface.
+* Verify installation
+   ```
+   # In python
+   import SofaGW
+   SofaGW.test_installation()
+   ```
+   You can see the simulation screen   
+ <img src="readme_files/example.gif">
 
 ## How to use   
-### Option 1. In the repository   
-1. Make your own python code into the directory \<SofaGuidewireNav>.   
-   * You only need to use four methods: `action`, `step`, `GetImage`, `reset`.
-      * `action`: Moves the guidewire in the simulation.   
-      * `step`: Calculates dynamics in the simulation for one step.   
-      * `GetImage`: Takes a picture of the simulation.      
-      * `reset`: Resets the simulation to its initial state. 
-      * `close`: Closes the simulation.   
-2. Run your code. 
+1. Imports the module.   
    ```
-   python <your_python_file>
-   ```   
-- You can refer [example_basic.py](example_basic.py).   
-   * First, import the module.   
-      ```
-      from SofaGW.simulation.SimServer import SimController
-      ```
-   * Second, create an object `sim` using the class `SimController`.
-      ```
-      sim = SimController(timeout=10,
-                          vessel_filename='vessel/phantom.obj')
-      ```
-   * Third, during the loop, use `sim.action`, `sim.step`, `sim.GetImage`, and `sim.reset`.   
-      ```
-      for i in range(500):
-         ...
-
-      sim.close()
-      ```
- - You can see the simulation screen while running [example_basic.py](example_basic.py) by running `python example_basic.py` within your conda virtual environment `sofarl`.   
- <img src="readme_files/example.gif">
-
-### Option 2. As an installed package
-1. Move `%SofaGuidewireNav%\SofaGW` into the directory `%anaconda3%\envs\sofarl\Lib\site-packages` or `%anaconda3%\envs\sofarl\lib\python3.8\site-packages`.
-2. Make your own python code into any preferred directory.
-   * You only need to use four methods: `action`, `step`, `GetImage`, `reset`.
-      * `action`: Moves the guidewire in the simulation.   
-      * `step`: Calculates dynamics in the simulation for one step.   
-      * `GetImage`: Takes a picture of the simulation.      
-      * `reset`: Resets the simulation to its initial state. 
-      * `close`: Closes the simulation.   
-    * Additionally, You have to make sure the parameter `vessel_filename` of `SimController` points the correct directory.
-3. Run your code. 
+   from SofaGW import SimController
    ```
-   python <your_python_file>
-   ```   
-- You can refer [example_module.py](example_module.py).   
-   * First, import the module.   
-      ```
-      from SofaGW import SimController
-      ```
-   * Second, create an object `sim` using the class `SimController`.
-      ```
-      sim = SimController(timeout=10,
-                          vessel_filename='vessel/phantom.obj')
-      ```
-   * Third, during the loop, use `sim.action`, `sim.step`, `sim.GetImage`, and `sim.reset`.   
-      ```
-      for i in range(500):
-         ...
+2. Creates an object `sim` using the class `SimController`.
+   ```
+   sim = SimController(timeout=10,
+                        vessel_filename='vessel/phantom.obj')
+   ```
+3. Use `sim.action`, `sim.step`, `sim.GetImage`, and `sim.reset`.  
+   * `sim.action`: Moves the guidewire in the simulation.   
+   * `sim.step`: Calculates dynamics in the simulation for one step.   
+   * `GetImage`: Takes a picture of the simulation.      
+   * `sim.reset`: Resets the simulation to its initial state. 
+   * `sim.close`: Closes the simulation.    
+- You can refer [example_module.py](example.py).   
 
-      sim.close()
-      ```
- - You can see the simulation screen while running [example_module.py](example_module.py) by running `python example_module.py` within your conda virtual environment `sofarl`.   
- <img src="readme_files/example.gif">
-
-
-## Task
-**Task:** Create an RL model that controls the guidewire to target a specific exit.   
-You can use python modules for RL, such as [Stable-Baselines3](https://stable-baselines3.readthedocs.io/en/master/).
 
 ## TODO
-* Revise this repository to be installed by `pip install git+https://`
