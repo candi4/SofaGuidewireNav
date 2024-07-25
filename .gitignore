@@ -1,0 +1,6 @@
+# For python cache
+__pycache__/
+*.py[cod]
+
+# For cache defined me
+_cache_/

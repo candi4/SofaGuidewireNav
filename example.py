@@ -1,8 +1,8 @@
-from SofaGW.simulation.SimServer import SimController
+from SofaGW import SimController, example_vessel
 from SofaGW.utils import SaveImage
 
 sim = SimController(timeout=10,
-                    vessel_filename='vessel/phantom.obj')
+                    vessel_filename=example_vessel)
 
 errclose = False
 for i in range(2000):
