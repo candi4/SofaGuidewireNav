@@ -143,7 +143,7 @@ class SimController():
         """
         mkdir(directory=self.commu_dir)
         print(self.commu_dir)
-        delete_old_files(directory=self.commu_dir, seconds_old=self.timeout+1)
+        delete_old_files(directory=self.commu_dir, seconds_old=self.timeout+60)
         self.server.runclient(vessel_filename=vessel_filename)
         self.sim_opened = True
     def action(self, translation=0, rotation=0):
