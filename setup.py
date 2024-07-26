@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 setup(
     name="SofaGW",
     py_modules=["SofaGW"],
-    version="1.0.8",
+    version="1.0.9",
     description="Use SOFA framework for guidewire navigation.",
     url="https://github.com/candi4/SofaGuidewireNav.git",
     author="candi4",
