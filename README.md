@@ -95,3 +95,4 @@ pip install git+https://github.com/candi4/SofaGuidewireNav.git
 
 
 ## TODO
+* Add parameter for controling youngModulus and youngModulusExtremity of GW
