@@ -30,6 +30,9 @@ For Ubuntu user:
    ```
    export SOFA_ROOT=/path/to/SOFA_install/SOFA_v23.06.00_Linux
    export PYTHONPATH=/path/to/SOFA_install/SOFA_v23.06.00_Linux/plugins/SofaPython3/lib/python3/site-packages:$PYTHONPATH
+   # For using SofaGym
+   export PYTHONPATH=/path/to/SOFA_install/SOFA_v23.06.00_Linux/plugins/STLIB/lib/python3/site-packages:$PYTHONPATH
+
    ```
    ```
    source ~/.bashrc
