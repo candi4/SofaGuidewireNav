@@ -28,8 +28,8 @@ For Ubuntu user:
    gedit ~/.bashrc
    ```
    ```
-   export SOFA_ROOT=/path/to/SOFA_install
-   export PYTHONPATH=/path/to/SofaPython3/lib/python3/site-packages:$PYTHONPATH
+   export SOFA_ROOT=/path/to/SOFA_install/SOFA_v23.06.00_Linux
+   export PYTHONPATH=/path/to/SOFA_install/SOFA_v23.06.00_Linux/plugins/SofaPython3/lib/python3/site-packages:$PYTHONPATH
    ```
    ```
    source ~/.bashrc
