@@ -13,7 +13,7 @@ conda activate sofarl
 ```
 
 ### 3. Install SOFA framework
-Download [SOFA_v23.06.00_Win64.zip](https://github.com/sofa-framework/sofa/releases/tag/v23.06.00).   
+Download [SOFA_v23.06.00_Win64.zip or SOFA_v23.06.00_Linux.zip](https://github.com/sofa-framework/sofa/releases/tag/v23.06.00).    
 Then, extract the zip file into preferred directory.   
 
 ### 4. Define the environment variables
